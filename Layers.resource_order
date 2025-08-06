@@ -1,0 +1,15 @@
+{
+  "FolderOrderSettings":[],
+  "ResourceOrderSettings":[
+    {"name":"control","order":2,"path":"objects/control/control.yy",},
+    {"name":"Room1","order":1,"path":"rooms/Room1/Room1.yy",},
+    {"name":"add_edificio","order":7,"path":"scripts/add_edificio/add_edificio.yy",},
+    {"name":"ds_list_contains","order":9,"path":"scripts/ds_list_contains/ds_list_contains.yy",},
+    {"name":"ds_list_remove","order":8,"path":"scripts/ds_list_remove/ds_list_remove.yy",},
+    {"name":"in","order":6,"path":"scripts/in/in.yy",},
+    {"name":"spr_base","order":5,"path":"sprites/spr_base/spr_base.yy",},
+    {"name":"spr_camino","order":4,"path":"sprites/spr_camino/spr_camino.yy",},
+    {"name":"spr_roja","order":3,"path":"sprites/spr_roja/spr_roja.yy",},
+    {"name":"spr_tunel","order":10,"path":"sprites/spr_tunel/spr_tunel.yy",},
+  ],
+}
