@@ -17,8 +17,10 @@ for(var c = 0; c < array_length(background); c++){
 draw_sprite(background[current_layer], 0, 0, 0)
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++)
-		if edificio[current_layer][# a, b] != -1
-			draw_sprite(edificio_sprite[edificio[current_layer][# a, b]], edificio_subsprite[current_layer][# a, b], a * 16, b * 16)
+		if bool_edificio[current_layer][# a, b]{
+			var edificio = id_edificio[current_layer][# a, b]
+			draw_sprite(edificio_sprite[edificio.index], edificio.subsprite, a * 16, b * 16)
+		}
 var temp_text = ""
 for(var a = 0; a < array_length(recurso_nombre); a++)
 	if floor(rss[a]) >= 1{
@@ -29,20 +31,21 @@ for(var a = 0; a < array_length(recurso_nombre); a++)
 	}
 for(var a = 0; a < ds_list_size(redes); a++){
 	var red = redes[|a], edificio_count = []
-	temp_text += $"Red {a}\n"
-	for(var b = 0; b < array_length(recurso_nombre); b++)
-		if red.produccion[b] > 0
-			temp_text += $"  +{red.produccion[b]} {recurso_nombre[b]}\n"
-	for(var b = 0; b < array_length(edificio_nombre); b++)
-		array_push(edificio_count, 0)
-	for(var b = 0; b < array_length(background); b++)
-		for(var c = 0; c < ds_list_size(red.edificios[b]); c++){
-			var temp_edificio = red.edificios[b][|c]
-			edificio_count[edificio[b][# temp_edificio[0], temp_edificio[1]]]++
+	if ds_list_size(red.edificios) > 2{
+		temp_text += $"Red {a}\n"
+		for(var b = 0; b < array_length(recurso_nombre); b++)
+			if red.produccion[b] > 0
+				temp_text += $"  +{red.produccion[b]} {recurso_nombre[b]}\n"
+		for(var b = 0; b < array_length(edificio_nombre); b++)
+			array_push(edificio_count, 0)
+		for(var c = 0; c < ds_list_size(red.edificios); c++){
+			var temp_edificio = red.edificios[|c]
+			edificio_count[temp_edificio.index]++
 		}
-	for(var b = 0; b < array_length(edificio_nombre); b++)
-		if edificio_count[b] > 0
-			temp_text += $"  {edificio_nombre[b]}: {edificio_count[b]}\n"
+		for(var b = 0; b < array_length(edificio_nombre); b++)
+			if edificio_count[b] > 0
+				temp_text += $"  {edificio_nombre[b]}: {edificio_count[b]}\n"
+	}
 	if red.base for(var b = 0; b < array_length(recurso_nombre); b++)
 		rss[b] += red.produccion[b] / 300
 }
@@ -97,3 +100,12 @@ if keyboard_check_pressed(vk_escape){
 	else
 		build_select = 0
 }
+if mouse_check_button_pressed(mb_right){
+	var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
+	if bool_edificio[current_layer][# mx, my]{
+		var edificio = id_edificio[current_layer][# mx, my]
+		if not in(edificio.index, 0, 3)
+			delete_edificio(mx, my)
+	}
+}
+draw_text(100, 0, $"{floor(mouse_x / 16)}, {floor(mouse_y / 16)}")
