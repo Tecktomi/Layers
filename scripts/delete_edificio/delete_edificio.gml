@@ -5,6 +5,7 @@ function delete_edificio(a, b, capa = control.current_layer){
 		ds_grid_set(id_edificio[capa], a, b, null_edificio)
 		var red = edificio.red
 		ds_list_remove(red.edificios, edificio)
+		red.edificio_count[edificio.index]--
 		if ds_list_empty(red.edificios){
 			ds_list_destroy(red.edificios)
 			ds_list_remove(redes, red)
@@ -38,11 +39,15 @@ function delete_edificio(a, b, capa = control.current_layer){
 				ds_grid_set(grid_vecinos, aa, bb, false)
 				var new_red = {
 					edificios : ds_list_create(),
+					edificio_count : [],
 					base : false,
 					produccion : [],
-					consumo : []
+					consumo : [],
+					red_color : c_black
 				}
 				var queue = ds_queue_create()
+				repeat(array_length(edificio_nombre))
+					array_push(new_red.edificio_count, 0)
 				repeat(array_length(recurso_nombre)){
 					array_push(new_red.produccion, 0)
 					array_push(new_red.consumo, 0)
@@ -58,9 +63,22 @@ function delete_edificio(a, b, capa = control.current_layer){
 					temp_capa = ds_queue_dequeue(queue)
 					edificio = id_edificio[temp_capa][# aa, bb]
 					edificio.red = new_red
+					new_red.edificio_count[edificio.index]++
 					ds_list_add(new_red.edificios, edificio)
 					if in(edificio.index, 2)
-						new_red.produccion[edificio.capa]++
+						new_red.produccion[temp_capa]++
+					else if in(edificio.index, 7)
+						new_red.produccion[0] += 2
+					else if in(edificio.index, 8, 9)
+						new_red.consumo[0]++
+					else{
+						if in(edificio.index, 4, 5)
+							new_red.consumo[0]++
+						if in(edificio.index, 4, 6)
+							new_red.consumo[1]++
+						if in(edificio.index, 5, 6)
+							new_red.consumo[2]++
+					}
 					for(var c = 0; c < 4; c++){
 						var aaa = aa + next_x[c], bbb = bb + next_y[c]
 						if aaa >= 0 and bbb >= 0 and aaa < xsize and bbb < ysize and bool_edificio[temp_capa][# aaa, bbb] and not visitado[temp_capa][# aaa, bbb]{

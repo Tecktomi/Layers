@@ -22,6 +22,8 @@ for(var a = 0; a < xsize; a++)
 		if bool_edificio[current_layer][# a, b]{
 			var edificio = id_edificio[current_layer][# a, b]
 			draw_sprite(edificio_sprite[edificio.index], edificio.subsprite, a * 16, b * 16)
+			if edificio.index = 1
+				draw_sprite_ext(spr_camino_color, edificio.subsprite, a * 16, b * 16, 1, 1, 0, edificio.red.red_color, 1)
 		}
 		else if micelio[current_layer][# a, b] = 1
 			draw_sprite(spr_micelio_1, micelio_subsprite[current_layer][# a, b], a * 16, b * 16)
@@ -39,7 +41,7 @@ for(var a = 0; a < array_length(recurso_nombre); a++)
 	}
 //Función de redes
 for(var a = 0; a < ds_list_size(redes); a++){
-	var red = redes[|a], edificio_count = []
+	var red = redes[|a], edificio_count = [], rss_eficiencia = [], temp_produccion = []
 	if modo_hacker and ds_list_size(red.edificios) > 2{
 		temp_text += $"Red {a}\n"
 		for(var b = 0; b < array_length(recurso_nombre); b++)
@@ -55,8 +57,58 @@ for(var a = 0; a < ds_list_size(redes); a++){
 			if edificio_count[b] > 0
 				temp_text += $"  {edificio_nombre[b]}: {edificio_count[b]}\n"
 	}
+	if red.consumo[0] > 0
+		rss_eficiencia[0] = clamp(red.produccion[0] / red.consumo[0], 0, 1)
+	else
+		rss_eficiencia[0] = 1
+	for(var b = 0; b < array_length(recurso_nombre); b++)
+		array_push(temp_produccion, 0)
+	temp_produccion[1] = rss_eficiencia[0] * 2 * red.edificio_count[8]
+	temp_produccion[2] = rss_eficiencia[0] * 2 * red.edificio_count[9]
+	for(var b = 1; b < array_length(recurso_nombre); b++)
+		if red.consumo[b] > 0
+			rss_eficiencia[b] = clamp((red.produccion[b] + temp_produccion[b]) / red.consumo[b], 0, 1)
+		else
+			rss_eficiencia[b] = 1
+	red.produccion[3] = min(rss_eficiencia[0], rss_eficiencia[1]) * red.edificio_count[4]
+	red.produccion[4] = min(rss_eficiencia[0], rss_eficiencia[2]) * red.edificio_count[5]
+	red.produccion[5] = min(rss_eficiencia[1], rss_eficiencia[2]) * red.edificio_count[6]
 	if red.base for(var b = 0; b < array_length(recurso_nombre); b++)
-		rss[b] += max(red.produccion[b] - red.consumo[b], 0) / 300
+		rss[b] += max(red.produccion[b] + temp_produccion[b] - red.consumo[b], 0) / 300
+	red.red_color = make_color_rgb(min(16 * (red.produccion[0] + temp_produccion[0] - red.consumo[0]), 255), min(16 * (red.produccion[1] + temp_produccion[1] - red.consumo[1]), 255), min(16 * (red.produccion[2] + temp_produccion[2] - red.consumo[2]), 255))
+}
+var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
+//Información previa de red
+if bool_edificio[current_layer][# mx, my]{
+	var edificio = id_edificio[current_layer][# mx, my], red = edificio.red, temp_array = [], temp_produccion = [], rss_eficiencia = []
+	for(var b = 0; b < array_length(recurso_nombre); b++){
+		if red.consumo[b] > 0
+			rss_eficiencia[b] = clamp(red.produccion[b] / red.consumo[b], 0, 1)
+		else
+			rss_eficiencia[b] = 1
+		array_push(temp_produccion, 0)
+	}
+	temp_produccion[1] = rss_eficiencia[0] * 2 * red.edificio_count[8]
+	temp_produccion[2] = rss_eficiencia[0] * 2 * red.edificio_count[9]
+	for(var a = 0; a < array_length(recurso_nombre); a++){
+		if red.produccion[a] + temp_produccion[a] > 0 or red.consumo[a] > 0{
+			temp_text += recurso_nombre[a]
+			if red.produccion[a] + temp_produccion[a] > 0
+				temp_text += $" +{red.produccion[a] + temp_produccion[a]}"
+			if red.consumo[a] > 0
+				temp_text += $" -{red.consumo[a]}"
+			temp_text += "\n"
+		}
+	}
+	repeat(array_length(edificio_nombre))
+		array_push(temp_array, 0)
+	for(var a = 0; a < ds_list_size(red.edificios); a++){
+		var temp_edificio = red.edificios[|a]
+		temp_array[temp_edificio.index]++
+	}
+	for(var a = 0; a < array_length(edificio_nombre); a++)
+		if temp_array[a] > 0
+			temp_text += $"  {edificio_nombre[a]}: {temp_array[a]}\n"
 }
 draw_set_color(c_black)
 draw_text(0, 0, temp_text)
@@ -67,9 +119,16 @@ if modo_hacker{
 }
 //Construir
 if build_select > 0{
-	var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
+	if in(build_select, 4, 5, 6){
+		if mouse_wheel_up()
+			build_select = 4 + (build_select - 3) mod 3
+		if mouse_wheel_down()
+			build_select = 4 + (build_select - 2) mod 3
+	}
+	if in(build_select, 7, 8, 9)
+		build_select = 7 + current_layer
 	if mouse_check_button_pressed(mb_left){
-		if in(build_select, 1, 2){
+		if in(build_select, 1, 2, 7, 8, 9){
 			build_x = mx
 			build_y = my
 		}
@@ -78,7 +137,7 @@ if build_select > 0{
 			add_edificio(build_select, mx, my)
 		}
 	}
-	if mouse_check_button_released(mb_left) and in(build_select, 1, 2){
+	if mouse_check_button_released(mb_left) and in(build_select, 1, 2, 7, 8, 9){
 		if abs(build_x - mx) > abs(build_y - my){
 			for(var a = min(build_x, mx); a <= max(build_x, mx); a++)
 				add_edificio(build_select, a, build_y)
@@ -86,7 +145,7 @@ if build_select > 0{
 		else for(var a = min(build_y, my); a <= max(build_y, my); a++)
 			add_edificio(build_select, build_x, a)
 	}
-	if in(build_select, 1, 2) and mouse_check_button(mb_left){
+	if in(build_select, 1, 2, 7, 8, 9) and mouse_check_button(mb_left){
 		if abs(build_x - mx) > abs(build_y - my){
 			for(var a = min(build_x, mx); a <= max(build_x, mx); a++)
 				draw_sprite(edificio_sprite[build_select], 0, a * 16, build_y * 16)
@@ -111,6 +170,10 @@ if keyboard_check_pressed(vk_anykey){
 		build_select = 1
 	if keyboard_check_pressed(ord(2))
 		build_select = 2
+	if keyboard_check_pressed(ord(3))
+		build_select = 4
+	if keyboard_check_pressed(ord(4))
+		build_select = 7
 	if keyboard_check_pressed(vk_escape){
 		if build_select = 0
 			game_end()
@@ -122,13 +185,10 @@ if keyboard_check_pressed(vk_anykey){
 	modo_hacker = not modo_hacker
 }
 }
-if mouse_check_button_pressed(mb_right){
-	var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
-	if bool_edificio[current_layer][# mx, my]{
-		var edificio = id_edificio[current_layer][# mx, my]
-		if not in(edificio.index, 0, 3)
-			delete_edificio(mx, my)
-	}
+if mouse_check_button_pressed(mb_right) and bool_edificio[current_layer][# mx, my]{
+	var edificio = id_edificio[current_layer][# mx, my]
+	if not in(edificio.index, 0, 3)
+		delete_edificio(mx, my)
 }
 //Crecimiento de micelio
 repeat(micelio_iteraciones * (1 + (keyboard_check(vk_space) * modo_hacker))){

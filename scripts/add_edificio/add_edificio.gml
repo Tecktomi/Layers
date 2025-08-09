@@ -1,9 +1,15 @@
 function add_edificio(index, a, b, capa = control.current_layer){
 	with control{
 		var flag = true, base = false
-		if in(index, 2) and not recurso[capa][# a, b]
+		if in(index, 2, 7, 8, 9) and not recurso[capa][# a, b]
+			flag = false
+		if index = 2 and capa = 2
+			flag = false
+		if not in(index, 0, 1, 3) and rss[edificio_precio[index]] < 1
 			flag = false
 		if flag and not bool_edificio[capa][# a, b] and not micelio[capa][# a, b]{
+			if not in(index, 0, 1, 3)
+				rss[edificio_precio[index]]--
 			var edificio = null_edificio
 			edificio = {
 				a : real(a),
@@ -55,10 +61,14 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			if ds_list_empty(temp_redes){
 				red = {
 					edificios : ds_list_create(),
+					edificio_count : [],
 					base : base,
 					produccion : [],
-					consumo : []
+					consumo : [],
+					red_color : c_black
 				}
+				repeat(array_length(edificio_nombre))
+					array_push(red.edificio_count, 0)
 				repeat(array_length(recurso_nombre)){
 					array_push(red.produccion, 0)
 					array_push(red.consumo, 0)
@@ -76,6 +86,8 @@ function add_edificio(index, a, b, capa = control.current_layer){
 							temp_edificio.red = red
 							ds_list_add(red.edificios, temp_edificio)
 						}
+						for(var d = 0; d < array_length(edificio_nombre); d++)
+							red.edificio_count[d] += real(temp_red.edificio_count[d])
 						for(var d = 0; d < array_length(recurso_nombre); d++){
 							red.produccion[d] += real(temp_red.produccion[d])
 							red.consumo[d] += real(temp_red.consumo[d])
@@ -88,9 +100,22 @@ function add_edificio(index, a, b, capa = control.current_layer){
 				}
 			}
 			ds_list_add(red.edificios, edificio)
+			red.edificio_count[index]++
 			edificio.red = red
 			if in(index, 2)
 				red.produccion[capa]++
+			else if in(index, 7)
+				red.produccion[0] += 2
+			else if in(index, 8, 9)
+				red.consumo[0]++
+			else{
+				if in(index, 4, 5)
+					red.consumo[0]++
+				if in(index, 4, 6)
+					red.consumo[1]++
+				if in(index, 5, 6)
+					red.consumo[2]++
+			}
 			if base
 				red.base = true
 			ds_list_destroy(temp_redes)

@@ -11,12 +11,13 @@ background = [undefined, undefined, undefined]
 current_layer = 0
 layer_color_background = [make_color_rgb(255, 127, 127), make_color_rgb(127, 255, 127), make_color_rgb(127, 127, 255)]
 layer_color_recurso = [c_red, c_green, c_blue]
-edificio_nombre = ["Base", "Camino", "Extractor", "Tunel", "Forja"]
-edificio_sprite = [spr_base, spr_camino, spr_roja, spr_tunel, spr_azul]
-edificio_precio = [-1, -1, 0, -1, 1]
-recurso_nombre = ["Rojo", "Verde", "Azul"]
+edificio_nombre = ["Base", "Camino", "Extractor", "Tunel", "Forja Amarillo", "Forja Magenta", "Forja Cian", "Taladro Mejorado Rojo", "Taladro Mejorado Verde", "Taladro Mejorado Azul"]
+edificio_sprite = [spr_base, spr_camino, spr_extractor, spr_tunel, spr_forja_amarillo, spr_forja_magenta, spr_forja_cian, spr_taladro_mejorado_rojo, spr_taladro_mejorado_verde, spr_taladro_mejorado_azul]
+edificio_precio = [0, 0, 0, 0, 1, 1, 1, 3, 3, 3]
+recurso_nombre = ["Rojo", "Verde", "Azul", "Amarillo", "Magenta", "Cian"]
 for(var a = array_length(recurso_nombre) - 1; a >= 0; a--)
 	rss[a] = 0
+rss[0] = 10
 null_edificio = {
 	a : 0,
 	b : 0,
@@ -27,9 +28,11 @@ null_edificio = {
 }
 null_red = {
 	edificios : ds_list_create(),
+	edificio_count : [0],
 	base : false,
 	produccion : [0],
-	consumo : [0]
+	consumo : [0],
+	red_color : c_black
 }
 ds_list_add(null_red.edificios, null_edificio)
 ds_list_clear(null_red.edificios)
