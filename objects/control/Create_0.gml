@@ -1,10 +1,12 @@
 randomize()
-poto = 0
 xsize = 80
 ysize = 40
 build_select = 0
 build_x = 0
 build_y = 0
+micelio_inteligente = false
+micelio_iteraciones = 10
+modo_hacker = false
 background = [undefined, undefined, undefined]
 current_layer = 0
 layer_color_background = [make_color_rgb(255, 127, 127), make_color_rgb(127, 255, 127), make_color_rgb(127, 127, 255)]
@@ -37,6 +39,7 @@ redes = ds_list_create()
 ds_list_add(redes, null_red)
 ds_list_clear(redes)
 null_edificio.red = null_red
+//Definición de mundo
 for(var c = 0; c < array_length(background); c++){
 	recurso[c] = ds_grid_create(xsize, ysize)
 	ds_grid_clear(recurso[c], false)
@@ -44,6 +47,11 @@ for(var c = 0; c < array_length(background); c++){
 	ds_grid_clear(bool_edificio[c], false)
 	id_edificio[c] = ds_grid_create(xsize, ysize)
 	ds_grid_clear(id_edificio[c], null_edificio)
+	micelio[c] = ds_grid_create(xsize, ysize)
+	ds_grid_clear(micelio[c], 0)
+	micelio_subsprite[c] = ds_grid_create(xsize, ysize)
+	ds_grid_clear(micelio_subsprite[c], 0)
+	//Recursos
 	repeat(4){
 		var a = irandom(xsize - 1), b = irandom(ysize - 1)
 		repeat(20){
@@ -53,15 +61,37 @@ for(var c = 0; c < array_length(background); c++){
 		}
 	}
 }
+//Base
 for(var a = floor(xsize / 2) - 1; a <= ceil(xsize / 2) + 1; a++)
 	for(var b = floor(ysize / 2) - 1; b <= ceil(ysize / 2) + 1; b++)
 		add_edificio(0, a, b)
+//Portales
 repeat(4){
-	var a = irandom(xsize - 1), b = irandom(ysize - 1)
+	do
+		var a = irandom(xsize - 1), b = irandom(ysize - 1)
+	until not bool_edificio[0][# a, b] and not bool_edificio[1][# a, b]
 	add_edificio(3, a, b, 0)
 	add_edificio(3, a, b, 1)
-	a = irandom(xsize - 1)
-	b = irandom(ysize - 1)
+	do{
+		a = irandom(xsize - 1)
+		b = irandom(ysize - 1)
+	}
+	until not bool_edificio[1][# a, b] and not bool_edificio[2][# a, b]
 	add_edificio(3, a, b, 1)
 	add_edificio(3, a, b, 2)
+}
+//Micelios iniciales
+repeat(1){
+	do
+		var a = irandom_range(1, xsize - 2), b = irandom_range(1, ysize - 2), capa = irandom(array_length(background) - 1)
+	until not bool_edificio[capa][# a, b]
+	ds_grid_set(micelio[capa], a, b, 2)
+	ds_grid_set(micelio[capa], a + 1, b, 1)
+	ds_grid_set(micelio_subsprite[capa], a + 1, b, 4)
+	ds_grid_set(micelio[capa], a, b + 1, 1)
+	ds_grid_set(micelio_subsprite[capa], a, b + 1, 2)
+	ds_grid_set(micelio[capa], a - 1, b, 1)
+	ds_grid_set(micelio_subsprite[capa], a - 1, b, 1)
+	ds_grid_set(micelio[capa], a, b - 1, 1)
+	ds_grid_set(micelio_subsprite[capa], a, b - 1, 8)
 }

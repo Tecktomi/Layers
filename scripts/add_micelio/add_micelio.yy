@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_micelio",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_micelio",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

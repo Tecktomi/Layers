@@ -3,7 +3,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 		var flag = true, base = false
 		if in(index, 2) and not recurso[capa][# a, b]
 			flag = false
-		if flag and not bool_edificio[capa][# a, b]{
+		if flag and not bool_edificio[capa][# a, b] and not micelio[capa][# a, b]{
 			var edificio = null_edificio
 			edificio = {
 				a : real(a),
@@ -18,6 +18,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			var next_x = [-1, 0, 1, 0], next_y = [0, -1, 0, 1], temp_redes = ds_list_create()
 			ds_list_add(temp_redes, null_red)
 			ds_list_clear(temp_redes)
+			//Detectar edificios colindantes
 			for(var c = 0; c < 4; c++){
 				var aa = a + next_x[c], bb = b + next_y[c]
 				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and bool_edificio[capa][# aa, bb] and not in(index, 0, 3){
@@ -36,6 +37,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 					}
 				}
 			}
+			//Detectar conexiones por portales
 			if index = 3{
 				if capa > 0{
 					var temp_edificio = id_edificio[capa - 1][# a, b]
@@ -49,6 +51,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 				}
 			}
 			var red = null_red
+			//Crear red
 			if ds_list_empty(temp_redes){
 				red = {
 					edificios : ds_list_create(),
@@ -64,6 +67,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			}
 			else{
 				red = temp_redes[|0]
+				//Combinar redes
 				if ds_list_size(temp_redes) > 1{
 					for(var c = 1; c < ds_list_size(temp_redes); c++){
 						var temp_red = temp_redes[|c]
@@ -90,6 +94,8 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			if base
 				red.base = true
 			ds_list_destroy(temp_redes)
+			return true
 		}
+		return false
 	}
 }
