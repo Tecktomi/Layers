@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"eficiencia",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"eficiencia",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

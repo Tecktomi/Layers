@@ -5,15 +5,15 @@ function add_micelio(a, b, capa, portal = false){
 			//Destruir edificios
 			if bool_edificio[capa][# a, b]{
 				//Mover micelio a travez de portales
-				if not portal and id_edificio[capa][# a, b].index = 3{
-					if capa > 0 and bool_edificio[capa - 1][# a, b] and id_edificio[capa - 1][# a, b].index = 3
+				if not portal and id_edificio[capa][# a, b].index = 10{
+					if capa > 0 and bool_edificio[capa - 1][# a, b] and id_edificio[capa - 1][# a, b].index = 10
 						for(var c = 0; c <= 3; c++)
 							add_micelio(a + next_x[c], b + next_y[c], capa - 1, true)
-					if capa < array_length(background) - 1 and bool_edificio[capa + 1][# a, b] and id_edificio[capa + 1][# a, b].index = 3
+					if capa < array_length(background) - 1 and bool_edificio[capa + 1][# a, b] and id_edificio[capa + 1][# a, b].index = 10
 						for(var c = 0; c <= 3; c++)
 							add_micelio(a + next_x[c], b + next_y[c], capa + 1, true)
 				}
-				if not id_edificio[capa][# a, b].index = 3
+				if id_edificio[capa][# a, b].index != 10
 					delete_edificio(a, b, capa)
 			}
 			//Crecer micelio
