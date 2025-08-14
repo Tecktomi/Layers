@@ -75,10 +75,10 @@ function add_edificio(index, a, b, capa = control.current_layer){
 							edificios : ds_list_create(),
 							edificios_index : [],
 							base : base,
-							red_color : c_black,
 							recurso : d,
-							recurso_produccion : 0,
-							recurso_consumo : 0
+							produccion : 0,
+							consumo : 0,
+							eficiencia : 0
 						}
 						repeat(array_length(edificio_nombre)){
 							var temp_edificio_list = ds_list_create()
@@ -87,6 +87,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 							array_push(red.edificios_index, temp_edificio_list)
 						}
 						ds_list_add(redes, red)
+						ds_list_add(redes_recurso[d], red)
 					}
 					else{
 						red = temp_redes[d][|0]
@@ -100,11 +101,12 @@ function add_edificio(index, a, b, capa = control.current_layer){
 									ds_list_add(red.edificios, temp_edificio)
 									ds_list_add(red.edificios_index[temp_edificio.index], temp_edificio)
 								}
-								red.recurso_produccion += temp_red.recurso_produccion
-								red.recurso_consumo += temp_red.recurso_consumo
+								red.produccion += temp_red.produccion
+								red.consumo += temp_red.consumo
 								if temp_red.base
 									base = true
 								ds_list_remove(redes, temp_red)
+								ds_list_remove(redes_recurso[d], temp_red)
 								ds_list_destroy(temp_red.edificios)
 							}
 						}
@@ -115,7 +117,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 					if base
 						red.base = true
 					ds_list_destroy(temp_redes[d])
-					update_eficiencia(d, capa, index, red)
+					flag_update_eficiencia = true
 				}
 			return true
 		}

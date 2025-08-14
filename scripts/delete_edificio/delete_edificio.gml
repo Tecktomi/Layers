@@ -11,6 +11,7 @@ function delete_edificio(a, b, capa = control.current_layer){
 				if ds_list_empty(red.edificios){
 					ds_list_destroy(red.edificios)
 					ds_list_remove(redes, red)
+					ds_list_remove(redes_recurso[red.recurso], red)
 					return
 				}
 			}
@@ -35,6 +36,7 @@ function delete_edificio(a, b, capa = control.current_layer){
 			if edificio_colores[edificio.index, d] and ds_list_size(next_edificios) >= 2{
 				var red = edificio.red[d]
 				ds_list_remove(redes, red)
+				ds_list_remove(redes_recurso[d], red)
 				var visitado = []
 				for(var c = 0; c < array_length(background); c++){
 					visitado[c] = ds_grid_create(xsize, ysize)
@@ -49,10 +51,10 @@ function delete_edificio(a, b, capa = control.current_layer){
 						edificios : ds_list_create(),
 						edificios_index : [],
 						base : false,
-						red_color : c_black,
 						recurso : d,
-						recurso_produccion : 0,
-						recurso_consumo : 0
+						produccion : 0,
+						consumo : 0,
+						eficiencia : 0
 					}
 					var queue = ds_queue_create()
 					repeat(array_length(edificio_nombre)){
@@ -62,6 +64,7 @@ function delete_edificio(a, b, capa = control.current_layer){
 						array_push(new_red.edificios_index, temp_edificio_list)
 					}
 					ds_list_add(redes, new_red)
+					ds_list_add(redes_recurso[d], new_red)
 					ds_queue_enqueue(queue, real(aa))
 					ds_queue_enqueue(queue, real(bb))
 					ds_queue_enqueue(queue, real(temp_capa))
@@ -74,12 +77,13 @@ function delete_edificio(a, b, capa = control.current_layer){
 						edificio.red[d] = new_red
 						ds_list_add(new_red.edificios, edificio)
 						ds_list_add(new_red.edificios_index[edificio.index], edificio)
-						update_eficiencia(d, temp_capa, edificio.index, new_red)
+						flag_update_eficiencia = true
 						for(var c = 0; c < 4; c++){
-								var aaa = aa + next_x[c], bbb = bb + next_y[c]
-								if aaa >= 0 and bbb >= 0 and aaa < xsize and bbb < ysize and bool_edificio[temp_capa][# aaa, bbb] and not visitado[temp_capa][# aaa, bbb]{
+							var aaa = aa + next_x[c], bbb = bb + next_y[c]
+							if aaa >= 0 and bbb >= 0 and aaa < xsize and bbb < ysize and bool_edificio[temp_capa][# aaa, bbb] and not visitado[temp_capa][# aaa, bbb]{
+								var temp_edificio = id_edificio[temp_capa][# aaa, bbb]
+								if edificio_colores[temp_edificio.index, d] and (in(edificio.index, 1, 2, 3, 4, 5, 6, 7) or in(temp_edificio.index, 1, 2, 3, 4, 5, 6, 7)){
 									ds_grid_set(visitado[temp_capa], aaa, bbb, true)
-									var temp_edificio = id_edificio[temp_capa][# aaa, bbb]
 									if temp_edificio.index != 0{
 										ds_queue_enqueue(queue, aaa)
 										ds_queue_enqueue(queue, bbb)
@@ -91,12 +95,13 @@ function delete_edificio(a, b, capa = control.current_layer){
 										ds_list_add(new_red.edificios, temp_edificio)
 										ds_list_add(new_red.edificios_index[temp_edificio.index], temp_edificio)
 									}
-									if grid_vecinos[# aaa, bbb]{
+									if grid_vecinos[# aaa, bbb] and temp_edificio.capa = capa{
 										ds_list_remove(next_edificios, temp_edificio)
 										ds_grid_set(grid_vecinos, aaa, bbb, false)
 									}
 								}
 							}
+						}
 						//Rehacer redes a travez de portales
 						if in(edificio.index, 10){
 							if temp_capa > 0 and bool_edificio[temp_capa - 1][# aa, bb] and not visitado[temp_capa - 1][# aa, bb] and id_edificio[temp_capa - 1][# aa, bb].index = 10{

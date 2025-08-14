@@ -43,23 +43,74 @@ for(var a = 0; a < array_length(recurso_nombre); a++)
 for(var a = 0; a < ds_list_size(redes); a++){
 	var red = redes[|a]
 	if red.base
-		rss[red.recurso] += max(red.recurso_produccion - red.recurso_consumo, 0) / 300
+		rss[red.recurso] += max(red.produccion - red.consumo, 0) / 300
+	if red.recurso = 5{
+		for(var b = 0; b < ds_list_size(red.edificios_index[18]); b++){
+			var temp_edificio = red.edificios_index[18][|b]
+			temp_edificio.produccion += red.eficiencia
+			if temp_edificio.produccion >= 200{
+				temp_edificio.produccion -= 200
+				var flag = false, dis = infinity, target_x = 0, target_y = 0, edi_a = temp_edificio.a, edi_b = temp_edificio.b
+				for(var c = 0; c < xsize; c++)
+					for(var d = 0; d < ysize; d++)
+						if micelio[temp_edificio.capa][# c, d] > 0{
+							var dis_2 = sqrt(sqr(edi_a - c) + sqr(edi_b - d))
+							if dis_2 < dis{
+								dis = dis_2
+								flag = true
+								target_x = c
+								target_y = d
+							}
+						}
+				if flag{
+					var new_dron = {
+						a : edi_a * 16,
+						b : edi_b * 16,
+						capa : temp_edificio.capa,
+						live : 8 * dis,
+						target_x : target_x,
+						target_y : target_y,
+						vel_x : 2 * (target_x - edi_a) / dis,
+						vel_y : 2 * (target_y - edi_b) / dis
+					}
+					ds_list_add(drones[temp_edificio.capa], new_dron)
+				}
+			}
+		}
+	}
 }
+//Función drones
+for(var a = 0; a < array_length(background); a++)
+	for(var b = 0; b < ds_list_size(drones[a]); b++){
+		var dron = drones[a][|b], aa = dron.a, bb = dron.b
+		dron.a += dron.vel_x
+		dron.b += dron.vel_y
+		dron.live--
+		if dron.live <= 0{
+			delete_micelio(dron.target_x, dron.target_y, dron.capa)
+			ds_list_remove(drones[a], dron)
+			b--
+		}
+		if current_layer = a
+			draw_sprite(spr_dron, 0, aa, bb)
+	}
 var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
 //Información previa de red
 if bool_edificio[current_layer][# mx, my]{
 	var edificio = id_edificio[current_layer][# mx, my]
 	temp_text += $"{edificio_nombre[edificio.index]}\n"
-	if in(edificio.index, 11, 12, 13, 14, 15, 16, 17)
-		temp_text += $"Eficiencia: {100 * edificio.produccion}%\n"
+	if in(edificio.index, 11, 12, 13, 15, 16, 17)
+		temp_text += $"Eficiencia: {floor(100 * edificio.produccion)}%\n"
+	else if in(edificio.index, 18)
+		temp_text += $"Producción: {floor(edificio.produccion / 2)}%\n"
 	for(var d = 0; d < array_length(recurso_nombre); d++)
 		if edificio_colores[edificio.index, d]{
 			var red = edificio.red[d], temp_array = [], temp_produccion = [], rss_eficiencia = []
 			temp_text += $"Red {recurso_nombre[d]}\n"
-			if red.recurso_produccion > 0
-				temp_text += $"  Produccion: {red.recurso_produccion}\n"
-			if red.recurso_consumo > 0
-				temp_text += $"  Consumo: {red.recurso_consumo}\n"
+			if red.produccion > 0 or red.consumo > 0{
+				temp_text += $"  Producción: {red.produccion} - {red.consumo} = {red.produccion - red.consumo}\n"
+				temp_text += $"  Eficiencia: {floor(100 * red.eficiencia)}%\n"
+			}
 			repeat(array_length(edificio_nombre))
 				array_push(temp_array, 0)
 			for(var a = 0; a < ds_list_size(red.edificios); a++){
@@ -68,7 +119,7 @@ if bool_edificio[current_layer][# mx, my]{
 			}
 			for(var a = 0; a < array_length(edificio_nombre); a++)
 				if temp_array[a] > 0
-					temp_text += $"  {edificio_nombre[a]}: {temp_array[a]}\n"
+					temp_text += $"    {edificio_nombre[a]}: {temp_array[a]}\n"
 		}
 }
 draw_set_color(c_black)
@@ -86,6 +137,17 @@ if build_select > 0{
 		if mouse_wheel_down()
 			build_select = 1 + (build_select + 5) mod 7
 		last_path = build_select
+		draw_set_alpha(0.5)
+		var c = 2 * pi / array_length(rss)
+		for(var a = 0; a < array_length(rss); a++){
+			var b = a * c
+			draw_set_color(recurso_color[a])
+			draw_triangle(room_width - 60, 60, room_width - 60 + 50 * cos(b), 60 - 50 * sin(b), room_width - 60 + 50 * cos(b + c), 60 - 50 * sin(b + c), false)
+		}
+		draw_set_alpha(1)
+		draw_set_color(c_black)
+		var b = (build_select - 1) * c
+		draw_triangle(room_width - 60, 60, room_width - 60 + 50 * cos(b), 60 - 50 * sin(b), room_width - 60 + 50 * cos(b + c), 60 - 50 * sin(b + c), true)
 	}
 	else if in(build_select, 8, 9) and current_layer < 2
 		build_select = 8 + current_layer
@@ -152,6 +214,8 @@ if keyboard_check_pressed(vk_anykey){
 	if keyboard_check_pressed(ord(5))
 		build_select = 17
 	if keyboard_check_pressed(ord(6))
+		build_select = 18
+	if keyboard_check_pressed(ord(7))
 		build_select = 10
 	if keyboard_check_pressed(vk_escape){
 		if build_select = 0
@@ -163,16 +227,21 @@ if keyboard_check_pressed(vk_anykey){
 		keyboard_string = ""
 		modo_hacker = not modo_hacker
 		tutorial = false
+		micelio_iteraciones = 10
 	}
 	if keyboard_check_pressed(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
 	if string_ends_with(keyboard_string, "reset")
 		game_restart()
 }
-if mouse_check_button_pressed(mb_right) and bool_edificio[current_layer][# mx, my]{
-	var edificio = id_edificio[current_layer][# mx, my]
-	if not in(edificio.index, 0, 10)
-		delete_edificio(mx, my)
+if mouse_check_button_pressed(mb_right){
+	if bool_edificio[current_layer][# mx, my]{
+		var edificio = id_edificio[current_layer][# mx, my]
+		if not in(edificio.index, 0, 10)
+			delete_edificio(mx, my)
+	}
+	if modo_hacker and micelio[current_layer][# mx, my] > 0
+		delete_micelio(mx, my, current_layer)
 }
 //Crecimiento de micelio
 repeat(micelio_iteraciones * (1 + (keyboard_check(vk_space) * modo_hacker))){
@@ -203,6 +272,10 @@ repeat(micelio_iteraciones * (1 + (keyboard_check(vk_space) * modo_hacker))){
 		}
 	}
 }
+if flag_update_eficiencia{
+	flag_update_eficiencia = false
+	update_eficiencia()
+}
 //Tutorial
 if tutorial{
 	if tutorial_current = 0 and rss[0] >= 11
@@ -217,6 +290,7 @@ if tutorial{
 		tutorial_current++
 	if tutorial_current = 5 and rss[6] >= 3
 		tutorial = false
+	micelio_iteraciones = 2 * tutorial_current
 	draw_set_halign(fa_center)
 	draw_set_alpha(0.5)
 	draw_text(room_width / 2, 20, tutorial_text[tutorial_current])

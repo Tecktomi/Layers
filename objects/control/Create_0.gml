@@ -1,4 +1,5 @@
 randomize()
+draw_set_font(letra)
 xsize = 80
 ysize = 40
 build_select = 0
@@ -8,6 +9,7 @@ micelio_inteligente = false
 micelio_iteraciones = 10
 modo_hacker = false
 last_path = 1
+flag_update_eficiencia = false
 background = [undefined, undefined, undefined]
 current_layer = 0
 layer_color_background = [make_color_rgb(255, 127, 127), make_color_rgb(127, 255, 127), make_color_rgb(127, 127, 255)]
@@ -52,6 +54,7 @@ def_edificio("Taladro Mejorado Verde", spr_taladro_mejorado_verde, 3, [0, 1])
 def_edificio("Taladro Mejorado Azul", spr_taladro_mejorado_azul, 3, [0, 2])
 //17
 def_edificio("Fábrica Blanca", spr_fabrica_blanca, 4, [3, 4, 5, 6])
+def_edificio("Fábrica de Drones", spr_cian, 5, [5])
 null_edificio = {
 	a : 0,
 	b : 0,
@@ -65,10 +68,10 @@ null_red = {
 	edificios : ds_list_create(),
 	edificios_index : [],
 	base : false,
-	red_color : c_black,
 	recurso : 0,
-	recurso_produccion : 0,
-	recurso_consumo : 0
+	produccion : 0,
+	consumo : 0,
+	eficiencia : 0
 }
 ds_list_add(null_red.edificios, null_edificio)
 ds_list_clear(null_red.edificios)
@@ -81,8 +84,32 @@ array_pop(null_red.edificios_index)
 redes = ds_list_create()
 ds_list_add(redes, null_red)
 ds_list_clear(redes)
-repeat(array_length(recurso_nombre))
+redes_recurso = []
+repeat(array_length(recurso_nombre)){
+	var temp_red_list = ds_list_create()
+	ds_list_add(temp_red_list, null_red)
+	ds_list_clear(temp_red_list)
+	array_push(redes_recurso, temp_red_list)
 	array_push(null_edificio.red, null_red)
+}
+//Drones
+null_dron = {
+	a : 0,
+	b : 0,
+	capa : 0,
+	live : 0,
+	target_x : 0,
+	target_y : 0,
+	vel_x : 0,
+	vel_y : 0
+}
+drones = []
+repeat(array_length(background)){
+	var temp_dron_list = ds_list_create()
+	ds_list_add(temp_dron_list, null_dron)
+	ds_list_clear(temp_dron_list)
+	array_push(drones, temp_dron_list)
+}
 #region tutorial
 tutorial = true
 tutorial_current = 0

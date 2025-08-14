@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"eficiencia",
+  "%Name":"calcular_eficiencia",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"eficiencia",
+  "name":"calcular_eficiencia",
   "parent":{
     "name":"Layers",
     "path":"Layers.yyp",

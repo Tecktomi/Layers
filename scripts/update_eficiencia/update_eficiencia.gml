@@ -1,58 +1,83 @@
-function update_eficiencia(d = 0, capa = 0, index = 0, red = control.null_red){
+function update_eficiencia(){
 	with control{
-		if in(index, 8, 9) and d = capa
-			red.recurso_produccion++
-		else if in(index, 14) and d = 0
-			red.recurso_produccion += 2
-		else if in(index, 15, 16) and d = 0
-			red.recurso_consumo++
-		else if index = 17{
-			if in(d, 3, 4, 5)
-				red.recurso_consumo++
+		//Red Rojo
+		for(var a = 0; a < ds_list_size(redes_recurso[0]); a++){
+			var red = redes_recurso[0][|a]
+			red.produccion = ds_list_size(red.edificios_index[8]) + 2 * ds_list_size(red.edificios_index[14])
+			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[14]) + ds_list_size(red.edificios_index[15]) + ds_list_size(red.edificios_index[16])
+			calcular_eficiencia(red)
 		}
-		else{
-			if in(index, 11, 12) and d = 0
-				red.recurso_consumo++
-			if in(index, 11, 13) and d = 1
-				red.recurso_consumo++
-			if in(index, 12, 13) and d = 2
-				red.recurso_consumo++
+		//Red Verde
+		for(var a = 0; a < ds_list_size(redes_recurso[1]); a++){
+			var red = redes_recurso[1][|a]
+			red.produccion = ds_list_size(red.edificios_index[9])
+			for(var b = 0; b < ds_list_size(red.edificios_index[15]); b++){
+				var edificio = red.edificios_index[15][|b]
+				edificio.produccion = 2 * edificio.red[0].eficiencia
+				red.produccion += edificio.produccion
+			}
+			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[13])
+			calcular_eficiencia(red)
 		}
-		for(var c = 0; c < ds_list_size(red.edificios_index[11]); c++){
-			var temp_edificio = red.edificios_index[11][|c], e0 = eficiencia(temp_edificio.red[0]), e1 = eficiencia(temp_edificio.red[1])
-			temp_edificio.red[3].recurso_produccion -= temp_edificio.produccion
-			temp_edificio.produccion = min(e0, e1)
-			temp_edificio.red[3].recurso_produccion += temp_edificio.produccion
+		//Red Azul
+		for(var a = 0; a < ds_list_size(redes_recurso[2]); a++){
+			var red = redes_recurso[2][|a]
+			red.produccion = 0
+			for(var b = 0; b < ds_list_size(red.edificios_index[16]); b++){
+				var edificio = red.edificios_index[16][|b]
+				edificio.produccion = 2 * edificio.red[0].eficiencia
+				red.produccion += edificio.produccion
+			}
+			red.consumo = ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[13])
+			calcular_eficiencia(red)
 		}
-		for(var c = 0; c < ds_list_size(red.edificios_index[12]); c++){
-			var temp_edificio = red.edificios_index[12][|c], e0 = eficiencia(temp_edificio.red[0]), e2 = eficiencia(temp_edificio.red[2])
-			temp_edificio.red[4].recurso_produccion -= temp_edificio.produccion
-			temp_edificio.produccion = min(e0, e2)
-			temp_edificio.red[4].recurso_produccion += temp_edificio.produccion
+		//Red Amarillo
+		for(var a = 0; a < ds_list_size(redes_recurso[3]); a++){
+			var red = redes_recurso[3][|a]
+			red.produccion = 0
+			for(var b = 0; b < ds_list_size(red.edificios_index[11]); b++){
+				var edificio = red.edificios_index[11][|b]
+				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[1].eficiencia)
+				red.produccion += edificio.produccion
+			}
+			red.consumo = ds_list_size(red.edificios_index[17])
+			calcular_eficiencia(red)
 		}
-		for(var c = 0; c < ds_list_size(red.edificios_index[13]); c++){
-			var temp_edificio = red.edificios_index[13][|c], e1 = eficiencia(temp_edificio.red[1]), e2 = eficiencia(temp_edificio.red[2])
-			temp_edificio.red[5].recurso_produccion -= temp_edificio.produccion
-			temp_edificio.produccion = min(e1, e2)
-			temp_edificio.red[5].recurso_produccion += temp_edificio.produccion
+		//Red Magenta
+		for(var a = 0; a < ds_list_size(redes_recurso[4]); a++){
+			var red = redes_recurso[4][|a]
+			red.produccion = 0
+			for(var b = 0; b < ds_list_size(red.edificios_index[12]); b++){
+				var edificio = red.edificios_index[12][|b]
+				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[2].eficiencia)
+				red.produccion += edificio.produccion
+			}
+			red.consumo = ds_list_size(red.edificios_index[17])
+			calcular_eficiencia(red)
 		}
-		for(var c = 0; c < ds_list_size(red.edificios_index[15]); c++){
-			var temp_edificio = red.edificios_index[15][|c]
-			temp_edificio.red[1].recurso_produccion -= temp_edificio.produccion
-			temp_edificio.produccion = 3 * eficiencia(temp_edificio.red[0])
-			temp_edificio.red[1].recurso_produccion += temp_edificio.produccion
+		//Red Cian
+		for(var a = 0; a < ds_list_size(redes_recurso[5]); a++){
+			var red = redes_recurso[5][|a]
+			red.produccion = 0
+			for(var b = 0; b < ds_list_size(red.edificios_index[13]); b++){
+				var edificio = red.edificios_index[13][|b]
+				edificio.produccion = min(edificio.red[1].eficiencia, edificio.red[2].eficiencia)
+				red.produccion += edificio.produccion
+			}
+			red.consumo = ds_list_size(red.edificios_index[17]) + ds_list_size(red.edificios_index[18])
+			calcular_eficiencia(red)
 		}
-		for(var c = 0; c < ds_list_size(red.edificios_index[16]); c++){
-			var temp_edificio = red.edificios_index[16][|c]
-			temp_edificio.red[2].recurso_produccion -= temp_edificio.produccion
-			temp_edificio.produccion = 3 * eficiencia(temp_edificio.red[0])
-			temp_edificio.red[2].recurso_produccion += temp_edificio.produccion
-		}
-		for(var c = 0; c < ds_list_size(red.edificios_index[17]); c++){
-			var temp_edificio = red.edificios_index[17][|c], c3 = eficiencia(temp_edificio.red[3]), c4 = eficiencia(temp_edificio.red[4]), c5 = eficiencia(temp_edificio.red[5])
-			temp_edificio.red[6].recurso_produccion -= temp_edificio.produccion
-			temp_edificio.produccion = min(c3, c4, c5)
-			temp_edificio.red[6].recurso_produccion += temp_edificio.produccion
+		//Red Blanco
+		for(var a = 0; a < ds_list_size(redes_recurso[6]); a++){
+			var red = redes_recurso[6][|a]
+			red.produccion = 0
+			for(var b = 0; b < ds_list_size(red.edificios_index[17]); b++){
+				var edificio = red.edificios_index[17][|b]
+				edificio.produccion = min(edificio.red[3].eficiencia, edificio.red[4].eficiencia, edificio.red[5].eficiencia)
+				red.produccion += edificio.produccion
+			}
+			red.consumo = 0
+			calcular_eficiencia(red)
 		}
 	}
 }
