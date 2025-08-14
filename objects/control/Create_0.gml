@@ -41,7 +41,7 @@ def_edificio("Camino Blanco", spr_camino, 0, [6])
 //8
 def_edificio("Extractor Rojo", spr_extractor_rojo, 0, [0])
 def_edificio("Extractor Verde", spr_extractor_verde, 0, [1])
-def_edificio("Tunel", spr_tunel, 7, [0, 1, 2, 3, 4, 5, 6])
+def_edificio("Tunel", spr_tunel, 6, [0, 1, 2, 3, 4, 5, 6])
 //11
 def_edificio("Forja Amarilla", spr_forja_amarillo, 1, [0, 1, 3])
 def_edificio("Forja Magenta", spr_forja_magenta, 2, [0, 2, 4])
@@ -65,8 +65,6 @@ null_red = {
 	edificios : ds_list_create(),
 	edificios_index : [],
 	base : false,
-	produccion : [0],
-	consumo : [0],
 	red_color : c_black,
 	recurso : 0,
 	recurso_produccion : 0,
@@ -80,8 +78,6 @@ ds_list_clear(temp_edificios_list)
 ds_list_destroy(temp_edificios_list)
 array_push(null_red.edificios_index, temp_edificios_list)
 array_pop(null_red.edificios_index)
-array_pop(null_red.produccion)
-array_pop(null_red.consumo)
 redes = ds_list_create()
 ds_list_add(redes, null_red)
 ds_list_clear(redes)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"update_eficiencia",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"update_eficiencia",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

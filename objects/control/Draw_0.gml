@@ -50,7 +50,7 @@ var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
 if bool_edificio[current_layer][# mx, my]{
 	var edificio = id_edificio[current_layer][# mx, my]
 	temp_text += $"{edificio_nombre[edificio.index]}\n"
-	if in(edificio.index, 11, 12, 13, 14, 15, 16)
+	if in(edificio.index, 11, 12, 13, 14, 15, 16, 17)
 		temp_text += $"Eficiencia: {100 * edificio.produccion}%\n"
 	for(var d = 0; d < array_length(recurso_nombre); d++)
 		if edificio_colores[edificio.index, d]{
@@ -151,6 +151,8 @@ if keyboard_check_pressed(vk_anykey){
 		build_select = 14
 	if keyboard_check_pressed(ord(5))
 		build_select = 17
+	if keyboard_check_pressed(ord(6))
+		build_select = 10
 	if keyboard_check_pressed(vk_escape){
 		if build_select = 0
 			game_end()
@@ -160,6 +162,7 @@ if keyboard_check_pressed(vk_anykey){
 	if string_ends_with(keyboard_string, "hacker"){
 		keyboard_string = ""
 		modo_hacker = not modo_hacker
+		tutorial = false
 	}
 	if keyboard_check_pressed(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())

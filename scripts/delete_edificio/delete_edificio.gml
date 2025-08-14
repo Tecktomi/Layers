@@ -49,8 +49,6 @@ function delete_edificio(a, b, capa = control.current_layer){
 						edificios : ds_list_create(),
 						edificios_index : [],
 						base : false,
-						produccion : [],
-						consumo : [],
 						red_color : c_black,
 						recurso : d,
 						recurso_produccion : 0,
@@ -62,10 +60,6 @@ function delete_edificio(a, b, capa = control.current_layer){
 						ds_list_add(temp_edificio_list, null_edificio)
 						ds_list_clear(temp_edificio_list)
 						array_push(new_red.edificios_index, temp_edificio_list)
-					}
-					repeat(array_length(recurso_nombre)){
-						array_push(new_red.produccion, 0)
-						array_push(new_red.consumo, 0)
 					}
 					ds_list_add(redes, new_red)
 					ds_queue_enqueue(queue, real(aa))
@@ -80,20 +74,7 @@ function delete_edificio(a, b, capa = control.current_layer){
 						edificio.red[d] = new_red
 						ds_list_add(new_red.edificios, edificio)
 						ds_list_add(new_red.edificios_index[edificio.index], edificio)
-						if in(edificio.index, 8, 9) and d = temp_capa
-							new_red.produccion[temp_capa]++
-						else if in(edificio.index, 14) and d = 0
-							new_red.produccion[0] += 2
-						else if in(edificio.index, 15, 16) and d = 0
-							new_red.consumo[0]++
-						else{
-							if in(edificio.index, 11, 12) and d = 0
-								new_red.consumo[0]++
-							if in(edificio.index, 11, 13) and d = 1
-								new_red.consumo[1]++
-							if in(edificio.index, 12, 13) and d = 2
-								new_red.consumo[2]++
-						}
+						update_eficiencia(d, temp_capa, edificio.index, new_red)
 						for(var c = 0; c < 4; c++){
 								var aaa = aa + next_x[c], bbb = bb + next_y[c]
 								if aaa >= 0 and bbb >= 0 and aaa < xsize and bbb < ysize and bool_edificio[temp_capa][# aaa, bbb] and not visitado[temp_capa][# aaa, bbb]{

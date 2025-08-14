@@ -75,8 +75,6 @@ function add_edificio(index, a, b, capa = control.current_layer){
 							edificios : ds_list_create(),
 							edificios_index : [],
 							base : base,
-							produccion : [],
-							consumo : [],
 							red_color : c_black,
 							recurso : d,
 							recurso_produccion : 0,
@@ -87,10 +85,6 @@ function add_edificio(index, a, b, capa = control.current_layer){
 							ds_list_add(temp_edificio_list, null_edificio)
 							ds_list_clear(temp_edificio_list)
 							array_push(red.edificios_index, temp_edificio_list)
-						}
-						repeat(array_length(recurso_nombre)){
-							array_push(red.produccion, 0)
-							array_push(red.consumo, 0)
 						}
 						ds_list_add(redes, red)
 					}
@@ -105,10 +99,6 @@ function add_edificio(index, a, b, capa = control.current_layer){
 									temp_edificio.red[d] = red
 									ds_list_add(red.edificios, temp_edificio)
 									ds_list_add(red.edificios_index[temp_edificio.index], temp_edificio)
-								}
-								for(var e = 0; e < array_length(recurso_nombre); e++){
-									red.produccion[e] += real(temp_red.produccion[e])
-									red.consumo[e] += real(temp_red.consumo[e])
 								}
 								red.recurso_produccion += temp_red.recurso_produccion
 								red.recurso_consumo += temp_red.recurso_consumo
@@ -125,68 +115,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 					if base
 						red.base = true
 					ds_list_destroy(temp_redes[d])
-					if in(index, 8, 9) and d = capa{
-						red.produccion[capa]++
-						red.recurso_produccion++
-					}
-					else if in(index, 14) and d = 0{
-						red.produccion[0] += 2
-						red.recurso_produccion += 2
-					}
-					else if in(index, 15, 16) and d = 0{
-						red.consumo[0]++
-						red.recurso_consumo++
-					}
-					else{
-						if in(index, 11, 12) and d = 0{
-							red.consumo[0]++
-							red.recurso_consumo++
-						}
-						if in(index, 11, 13) and d = 1{
-							red.consumo[1]++
-							red.recurso_consumo++
-						}
-						if in(index, 12, 13) and d = 2{
-							red.consumo[2]++
-							red.recurso_consumo++
-						}
-					}
-					for(var c = 0; c < ds_list_size(red.edificios_index[11]); c++){
-						var temp_edificio = red.edificios_index[11][|c], e0 = eficiencia(temp_edificio.red[0]), e1 = eficiencia(temp_edificio.red[1])
-						temp_edificio.red[3].recurso_produccion -= temp_edificio.produccion
-						temp_edificio.produccion = min(e0, e1)
-						temp_edificio.red[3].recurso_produccion += temp_edificio.produccion
-					}
-					for(var c = 0; c < ds_list_size(red.edificios_index[12]); c++){
-						var temp_edificio = red.edificios_index[12][|c], e0 = eficiencia(temp_edificio.red[0]), e2 = eficiencia(temp_edificio.red[2])
-						temp_edificio.red[4].recurso_produccion -= temp_edificio.produccion
-						temp_edificio.produccion = min(e0, e2)
-						temp_edificio.red[4].recurso_produccion += temp_edificio.produccion
-					}
-					for(var c = 0; c < ds_list_size(red.edificios_index[13]); c++){
-						var temp_edificio = red.edificios_index[13][|c], e1 = eficiencia(temp_edificio.red[1]), e2 = eficiencia(temp_edificio.red[2])
-						temp_edificio.red[5].recurso_produccion -= temp_edificio.produccion
-						temp_edificio.produccion = min(e1, e2)
-						temp_edificio.red[5].recurso_produccion += temp_edificio.produccion
-					}
-					for(var c = 0; c < ds_list_size(red.edificios_index[15]); c++){
-						var temp_edificio = red.edificios_index[15][|c]
-						temp_edificio.red[1].recurso_produccion -= temp_edificio.produccion
-						temp_edificio.produccion = 3 * eficiencia(temp_edificio.red[0])
-						temp_edificio.red[1].recurso_produccion += temp_edificio.produccion
-					}
-					for(var c = 0; c < ds_list_size(red.edificios_index[16]); c++){
-						var temp_edificio = red.edificios_index[16][|c]
-						temp_edificio.red[2].recurso_produccion -= temp_edificio.produccion
-						temp_edificio.produccion = 3 * eficiencia(temp_edificio.red[0])
-						temp_edificio.red[2].recurso_produccion += temp_edificio.produccion
-					}
-					for(var c = 0; c < ds_list_size(red.edificios_index[17]); c++){
-						var temp_edificio = red.edificios_index[17][|c], c3 = eficiencia(temp_edificio.red[3]), c4 = eficiencia(temp_edificio.red[4]), c5 = eficiencia(temp_edificio.red[5])
-						temp_edificio.red[6].recurso_produccion -= temp_edificio.produccion
-						temp_edificio.produccion = min(c3, c4, c5)
-						temp_edificio.red[6].recurso_produccion += temp_edificio.produccion
-					}
+					update_eficiencia(d, capa, index, red)
 				}
 			return true
 		}

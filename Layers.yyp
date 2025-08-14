@@ -28,6 +28,7 @@
     {"id":{"name":"ds_list_remove","path":"scripts/ds_list_remove/ds_list_remove.yy",},},
     {"id":{"name":"eficiencia","path":"scripts/eficiencia/eficiencia.yy",},},
     {"id":{"name":"in","path":"scripts/in/in.yy",},},
+    {"id":{"name":"update_eficiencia","path":"scripts/update_eficiencia/update_eficiencia.yy",},},
     {"id":{"name":"spr_azul","path":"sprites/spr_azul/spr_azul.yy",},},
     {"id":{"name":"spr_base","path":"sprites/spr_base/spr_base.yy",},},
     {"id":{"name":"spr_camino_color","path":"sprites/spr_camino_color/spr_camino_color.yy",},},

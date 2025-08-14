@@ -10,6 +10,7 @@
     {"name":"ds_list_remove","order":8,"path":"scripts/ds_list_remove/ds_list_remove.yy",},
     {"name":"eficiencia","order":26,"path":"scripts/eficiencia/eficiencia.yy",},
     {"name":"in","order":6,"path":"scripts/in/in.yy",},
+    {"name":"update_eficiencia","order":27,"path":"scripts/update_eficiencia/update_eficiencia.yy",},
     {"name":"spr_azul","order":14,"path":"sprites/spr_azul/spr_azul.yy",},
     {"name":"spr_base","order":5,"path":"sprites/spr_base/spr_base.yy",},
     {"name":"spr_camino_color","order":24,"path":"sprites/spr_camino_color/spr_camino_color.yy",},
