@@ -108,7 +108,7 @@ if bool_edificio[current_layer][# mx, my]{
 			var red = edificio.red[d], temp_array = [], temp_produccion = [], rss_eficiencia = []
 			temp_text += $"Red {recurso_nombre[d]}\n"
 			if red.produccion > 0 or red.consumo > 0{
-				temp_text += $"  Producción: {red.produccion} - {red.consumo} = {red.produccion - red.consumo}\n"
+				temp_text += $"  Producción: {red.produccion} - {red.consumo} = {red.produccion > red.consumo ? "+" : ""}{red.produccion - red.consumo}\n"
 				temp_text += $"  Eficiencia: {floor(100 * red.eficiencia)}%\n"
 			}
 			repeat(array_length(edificio_nombre))

@@ -7,9 +7,11 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			flag = false
 		if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 9, 10) and rss[edificio_precio[index]] < 1
 			flag = false
-		if flag and not bool_edificio[capa][# a, b] and not micelio[capa][# a, b]{
+		if flag and not bool_edificio[capa][# a, b] and not micelio[capa][# a, b] or (bool_edificio[capa][# a, b] and in(id_edificio[capa][# a, b].index, 8, 9) and index = id_edificio[capa][# a, b].index + 6){
 			if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 10)
 				rss[edificio_precio[index]]--
+			if bool_edificio[capa][# a, b] and in(id_edificio[capa][# a, b].index, 8, 9) and index = id_edificio[capa][# a, b].index + 6
+				delete_edificio(a, b, capa)
 			var edificio = null_edificio
 			edificio = {
 				a : real(a),

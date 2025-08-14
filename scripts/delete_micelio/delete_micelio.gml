@@ -4,6 +4,7 @@ function delete_micelio(a, b, capa){
 			var next_x = [-1, 0, 1, 0], next_y = [0, -1, 0, 1]
 			ds_grid_set(micelio[capa], a, b, 0)
 			ds_grid_set(micelio_subsprite[capa], a, b, 0)
+			ds_grid_set(micelio_tick[capa], a, b, 0)
 			for(var c = 0; c < 4; c++){
 				var aa = a + next_x[c], bb = b + next_y[c]
 				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and micelio[capa][# aa, bb] > 0

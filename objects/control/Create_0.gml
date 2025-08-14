@@ -158,6 +158,9 @@ for(var c = 0; c < array_length(background); c++){
 	var temp_micelio_subsprite = ds_grid_create(xsize, ysize)
 	ds_grid_clear(temp_micelio_subsprite, 0)
 	micelio_subsprite[c] = temp_micelio_subsprite
+	var temp_micelio_tick = ds_grid_create(xsize, ysize)
+	ds_grid_clear(temp_micelio_tick, 0)
+	micelio_tick[c] = temp_micelio_tick
 	//Recursos
 	repeat(4){
 		var a = irandom(xsize - 1), b = irandom(ysize - 1)

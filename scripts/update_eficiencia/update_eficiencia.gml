@@ -4,7 +4,7 @@ function update_eficiencia(){
 		for(var a = 0; a < ds_list_size(redes_recurso[0]); a++){
 			var red = redes_recurso[0][|a]
 			red.produccion = ds_list_size(red.edificios_index[8]) + 2 * ds_list_size(red.edificios_index[14])
-			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[14]) + ds_list_size(red.edificios_index[15]) + ds_list_size(red.edificios_index[16])
+			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[15]) + ds_list_size(red.edificios_index[16])
 			calcular_eficiencia(red)
 		}
 		//Red Verde
