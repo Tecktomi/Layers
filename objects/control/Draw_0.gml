@@ -1,3 +1,159 @@
+cursor = cr_arrow
+if menu > 0{
+	draw_set_color(layer_color_background[0])
+	draw_rectangle(0, 0, xsize * 16, ysize * 16, false)
+	draw_set_color(c_black)
+	if menu = 1{
+		draw_set_halign(fa_center)
+		draw_set_font(letra_titulo)
+		draw_text(room_width/2, 100, "L A Y E R S")
+		draw_set_color(layer_color_recurso[0])
+		if get_boton(room_width / 2, 200, "Jugar"){
+			image_index = 0
+			menu = 0
+			//Portales
+			repeat(total_portales){
+				do var a = irandom_range(1, xsize - 2), b = irandom_range(1, ysize - 2)
+				until not bool_edificio[0][# a, b] and not bool_edificio[1][# a, b]
+				add_edificio(10, a, b, 0)
+				add_edificio(10, a, b, 1)
+				do{
+					a = irandom_range(1, xsize - 2)
+					b = irandom_range(1, ysize - 2)
+				}
+				until not bool_edificio[1][# a, b] and not bool_edificio[2][# a, b]
+				add_edificio(10, a, b, 1)
+				add_edificio(10, a, b, 2)
+			}
+			//Micelios iniciales
+			repeat(total_micelios){
+				do var a = irandom_range(1, xsize - 2), b = irandom_range(1, ysize - 2), capa = irandom_range(1, array_length(background) - 1)
+				until not bool_edificio[capa][# a, b]
+				add_micelio(a, b, capa)
+				var next_x = [-1, 0, 1, 0], next_y = [0, -1, 0, 1]
+				for(var c = 0; c < 4; c++)
+					add_micelio(a + next_x[c], b + next_y[c], capa)
+			}
+		}
+		draw_set_font(letra)
+		draw_text(room_width / 2, 260, $"Micelio inicial: {total_micelios}")
+		total_micelios = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 280, 1, 5, round(total_micelios), 1))
+		draw_text(room_width / 2, 300, $"Túneles por Capa: {total_portales}")
+		total_portales = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 320, 1, 5, round(total_portales), 2))
+		draw_text(room_width / 2, 340, $"Velocidad Micelio: {micelio_iteraciones}")
+		micelio_iteraciones = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 360, 4, 30, round(micelio_iteraciones), 3))
+		draw_text(room_width / 2, 380, $"Precio Edificios: {valor_edificios}")
+		valor_edificios = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 400, 1, 5, round(valor_edificios), 4))
+		draw_set_color(layer_color_recurso[0])
+		draw_set_font(letra_titulo)
+		if get_boton(room_width / 2, 440, "¿Cómo jugar?")
+			menu = 2
+	}
+	else{
+		draw_set_halign(fa_left)
+		draw_set_font(letra_titulo)
+		draw_text(20, 20, "¿Cómo Jugar?")
+		draw_set_font(letra)
+		var ypos = 60, xpos = 40
+		if menu = 2{
+			draw_text(xpos, ypos, "Extracción Básica")
+			ypos += 20
+			var temp_complex = draw_sprite_uwu(spr_tutorial_1, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos, 
+				"Construye Extractores sobre las zonas de recursos con \"2\".\n" +
+				"Conecta los Extractores a la Base con Caminos con \"1\".\n" +
+				"Los Extractores producirán recurso Rojo.")
+			ypos += temp_complex[1] + 10
+			temp_complex = draw_sprite_uwu(spr_tutorial_2, 0, 40, ypos)
+			xpos += temp_complex[0] + 5
+			var temp_complex_2 = draw_sprite_uwu(spr_tutorial_3, 0, xpos, ypos)
+			draw_text(xpos + temp_complex_2[0] + 5, ypos,
+				"Muévete entre capas usando las Flechas Arriba y Abajo.\n" +
+				"Conecta Caminos entre capas a traves de los Túneles multicolores.\n" +
+				"Produce recurso Verde construyendo Extractores en esa capa.")
+			ypos += temp_complex[1] + 10
+			temp_complex = draw_sprite_uwu(spr_tutorial_11, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos,
+				"Para mover distintos recursos se necesitan distintos Caminos.\n" +
+				"Cambia entre Caminos usando la Rueda del Mouse.\n" +
+				"Los Caminos solo se conectarán a los edificios que procesen su color.")
+		}
+		else if menu = 3{
+			draw_text(xpos, ypos, "Primeras Fábricas")
+			ypos += 20
+			var temp_complex = draw_sprite_uwu(spr_tutorial_4, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos, 
+				"Construye Mezcladoras Amarillas para producir recurso Amarillo.\n" +
+				"Este edificio necesita un suministro constante de Rojo y Verde.")
+			ypos += temp_complex[1] + 10
+			temp_complex = draw_sprite_uwu(spr_tutorial_5, 0, 40, ypos)
+			xpos += temp_complex[0] + 5
+			temp_complex = draw_sprite_uwu(spr_tutorial_7, 0, xpos, ypos)
+			draw_text(xpos + temp_complex[0] + 5, ypos, 
+				"Construye mejores Extractores para producir recurso Azul.\n" +
+				"Estos Extractores requiere suministro constante de Rojo para producir.\n" +
+				"Recuerda utilizar Caminos del color apropiado para cada recurso.")
+			ypos += temp_complex[1] + 10
+		}
+		else if menu = 4{
+			draw_text(xpos, ypos, "Fábrica Avanzadas")
+			ypos += 20
+			var temp_complex = draw_sprite_uwu(spr_tutorial_8, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos, 
+				"Produce recursos Magenta y Cian en sus Mezcladoras respectivas.\n" +
+				"El Magenta se fabrica con Rojo y Azul y el Cian con Verde y Azul.")
+			ypos += temp_complex[1] + 10
+			temp_complex = draw_sprite_uwu(spr_tutorial_9, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos,
+				"Construye una Fábrica de Blanco presionando \"5\".\n" +
+				"Produce recurso Blanco mezclando Amarillo, Magenta y Cian.")
+			ypos += temp_complex[1] + 10
+			temp_complex = draw_sprite_uwu(spr_tutorial_12, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos,
+				"Crea o elimina Túneles multicolores con recurso Blanco presionando \"7\".\n" +
+				"Si construyes dos Túneles en la misma posición en distintas capas, se conectarán.\n" +
+				"Los Túneles además sirven como cruce de Caminos aunque no estén conectados a otro Túnel.")
+		}
+		else if menu = 5{
+			draw_text(xpos, ypos, "Defensa y Ataque")
+			ypos += 20
+			var temp_complex = draw_sprite_uwu(spr_tutorial_13, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos, 
+				"¡Cuidado con el Micelio que está creciendo!\n" +
+				"El Micelio crece lento pero seguro devorando todo a su paso.\n" +
+				"Puede atravezar Túneles e invadir otras capas.\n" +
+				"Si llegas hasta la Base, perderás.")
+			ypos += temp_complex[1] + 10
+			temp_complex = draw_sprite_uwu(spr_tutorial_10, 0, 40, ypos)
+			draw_text(40 + temp_complex[0] + 5, ypos, 
+				"Para defenderte construye una Fábrica de Drones con \"6\".\n" +
+				"Esta consume recurso Cian para producir Drones si hay Micelio en la capa.\n" +
+				"Los Drones volarán hasta el Micelio más cercano y lo destruirán.")
+		}
+		draw_set_halign(fa_center)
+		draw_set_color(layer_color_recurso[0])
+		if menu > 2 and get_boton(room_width / 2 - 100, room_height - 100, "Anterior")
+			menu--
+		draw_set_color(layer_color_recurso[0])
+		if menu < 5 and get_boton(room_width / 2 + 100, room_height - 100, "Siguiente")
+			menu++
+		draw_set_color(layer_color_recurso[0])
+		if get_boton(room_width / 2, room_height - 60, "Volver")
+			menu = 1
+	}
+	draw_set_font(letra)
+	draw_set_valign(fa_bottom)
+	draw_set_halign(fa_left)
+	draw_text(0, room_height, "Versión: 1.0.0")
+	draw_set_halign(fa_right)
+	draw_text(room_width, room_height, "Por Tomás Ramdohr")
+	draw_set_valign(fa_top)
+	draw_set_halign(fa_left)
+	window_set_cursor(cursor)
+	if keyboard_check_pressed(vk_escape)
+		game_end()
+	exit
+}
 //Actualizar fondo
 for(var c = 0; c < array_length(background); c++){
 	if background[c] = undefined{
@@ -131,6 +287,7 @@ if modo_hacker{
 }
 //Construir
 if build_select > 0{
+	var fail_text = ""
 	if in(build_select, 1, 2, 3, 4, 5, 6, 7){
 		if mouse_wheel_up()
 			build_select = 1 + build_select mod 7
@@ -149,16 +306,34 @@ if build_select > 0{
 		var b = (build_select - 1) * c
 		draw_triangle(room_width - 60, 60, room_width - 60 + 50 * cos(b), 60 - 50 * sin(b), room_width - 60 + 50 * cos(b + c), 60 - 50 * sin(b + c), true)
 	}
-	else if in(build_select, 8, 9) and current_layer < 2
-		build_select = 8 + current_layer
+	else if in(build_select, 8, 9){
+		if current_layer < 2{
+			build_select = 8 + current_layer
+			if not recurso[current_layer][# mx, my]
+				fail_text += "Terreno inválido\n"
+		}
+		else
+			fail_text += "Necesitas un mejor extractor\n"
+	}
 	else if in(build_select, 11, 12, 13){
 		if mouse_wheel_up()
 			build_select = 11 + (build_select - 10) mod 3
 		if mouse_wheel_down()
 			build_select = 11 + (build_select - 9) mod 3
 	}
-	else if in(build_select, 14, 15, 16)
+	else if in(build_select, 14, 15, 16){
 		build_select = 14 + current_layer
+		if not recurso[current_layer][# mx, my]
+			fail_text += "Terreno inválido\n"
+	}
+	if rss[edificio_precio[build_select]] <= valor_edificios and not in(build_select, 1, 2, 3, 4, 5, 6, 7)
+		fail_text += $"Insuficiente {recurso_nombre[edificio_precio[build_select]]}\n"
+	if bool_edificio[current_layer][# mx, my]
+		fail_text += "Terreno utilizado\n"
+	if micelio[current_layer][# mx, my] > 0
+		fail_text += "No se puede construir sobre Micelio\n"
+	if fail_text != ""
+		draw_text((mx + 1) * 16, my * 16, fail_text)
 	if mouse_check_button_pressed(mb_left){
 		if not in(build_select, 0, 10){
 			build_x = mx
@@ -219,39 +394,39 @@ if keyboard_check_pressed(vk_anykey){
 		build_select = 10
 	if keyboard_check_pressed(vk_escape){
 		if build_select = 0
-			game_end()
+			game_restart()
 		else
 			build_select = 0
 	}
 	if string_ends_with(keyboard_string, "hacker"){
 		keyboard_string = ""
 		modo_hacker = not modo_hacker
-		tutorial = false
 		micelio_iteraciones = 10
 	}
 	if keyboard_check_pressed(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
-	if string_ends_with(keyboard_string, "reset")
-		game_restart()
 }
 if mouse_check_button_pressed(mb_right){
 	if bool_edificio[current_layer][# mx, my]{
 		var edificio = id_edificio[current_layer][# mx, my]
-		if not in(edificio.index, 0, 10)
+		if not in(edificio.index, 0, 10) or (rss[6] >= valor_edificios and edificio.index = 10) or modo_hacker{
+			if edificio.index = 10 and not modo_hacker
+				rss[6] -= valor_edificios
 			delete_edificio(mx, my)
+		}
 	}
 	if modo_hacker and micelio[current_layer][# mx, my] > 0
 		delete_micelio(mx, my, current_layer)
 }
 //Crecimiento de micelio
-repeat(micelio_iteraciones * (1 + (keyboard_check(vk_space) * modo_hacker))){
+repeat(micelio_iteraciones){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1), capa = irandom(array_length(background) - 1)
 	if modo_hacker and keyboard_check(vk_space){
 		a = floor(mouse_x / 16)
 		b = floor(mouse_y / 16)
 		capa = current_layer
 	}
-	if micelio[capa][# a, b] = 1{
+	if micelio[capa][# a, b] = 1 and micelio_subsprite[capa][# a, b] < 15{
 		var next_x = [-1, 0, 1, 0], next_y = [0, -1, 0, 1], flag = false, c = 0
 		if not micelio_inteligente
 			c = irandom(3)
@@ -276,24 +451,4 @@ if flag_update_eficiencia{
 	flag_update_eficiencia = false
 	update_eficiencia()
 }
-//Tutorial
-if tutorial{
-	if tutorial_current = 0 and rss[0] >= 11
-		tutorial_current++
-	if tutorial_current = 1 and rss[1] >= 3
-		tutorial_current++
-	if tutorial_current = 2 and rss[3] >= 3
-		tutorial_current++
-	if tutorial_current = 3 and rss[2] >= 3
-		tutorial_current++
-	if tutorial_current = 4 and rss[4] >= 3 and rss[5] >= 3
-		tutorial_current++
-	if tutorial_current = 5 and rss[6] >= 3
-		tutorial = false
-	micelio_iteraciones = 2 * tutorial_current
-	draw_set_halign(fa_center)
-	draw_set_alpha(0.5)
-	draw_text(room_width / 2, 20, tutorial_text[tutorial_current])
-	draw_set_halign(fa_left)
-	draw_set_alpha(1)
-}
+window_set_cursor(cursor)

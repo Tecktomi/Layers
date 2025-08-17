@@ -1,5 +1,5 @@
 randomize()
-draw_set_font(letra)
+cursor = cr_arrow
 xsize = 80
 ysize = 40
 build_select = 0
@@ -10,8 +10,13 @@ micelio_iteraciones = 10
 modo_hacker = false
 last_path = 1
 flag_update_eficiencia = false
+menu = 1
 background = [undefined, undefined, undefined]
 current_layer = 0
+total_micelios = 3
+total_portales = 4
+valor_edificios = 2
+deslizante_index = 0
 layer_color_background = [make_color_rgb(255, 127, 127), make_color_rgb(127, 255, 127), make_color_rgb(127, 127, 255)]
 layer_color_recurso = [c_red, c_green, c_blue]
 edificio_nombre = []
@@ -110,37 +115,6 @@ repeat(array_length(background)){
 	ds_list_clear(temp_dron_list)
 	array_push(drones, temp_dron_list)
 }
-#region tutorial
-tutorial = true
-tutorial_current = 0
-tutorial_text = [
-	"Bienvenidx a LAYERS, un juego de fábricas un poco distinto\n\n" +
-	"Lo primero que debes aprender es a construir extractores y caminos\n" +
-	"Presiona 2 para construir un extractor, luego haz clic en algún terreno con recurso Rojo\n" +
-	"Ahora presiona 1 y construye un camino que conecte el extractor con la base blanca del centro\n" +
-	"Esto generará constantemente recurso Rojo. Mientras más extractores conectados, más producirás.",
-	
-	"Ahora que sabes extraer Rojo, vamos a movernos a otra capa\n" +
-	"Usando la flechas Arriba y Abajo puedes moverte entre las tres capas que hay\n" +
-	"Las capas se conectan por medio de los portales multicolor, al conectar un camino a uno de estos, los recursos se mueven entre ellas\n" +
-	"Es importante tener en cuenta que cada tipo de recurso necesita su propio camino, puedes alternar el tipo de camino con la rueda del mouse\n" +
-	"Construye extractores en la capa Verde y conctamos a la base a travez de un portal.",
-	
-	"Genial, ahora estás produciendo rojo y verde, lo siguiente es aprender a mezclarlos\n" +
-	"Presiona 3 para construir una mezcladora Amarilla\n" +
-	"Este edificio necesita que le llegue un flujo de Rojo y Verde para emprezar a producir Amarillo.",
-	
-	"Lo siguiente son los extractores avanzados, puedes construirlos presionando 4\n" +
-	"Estos permiten extraer Azul y son más rápidos, pero necesitan un suministro de Rojo\n" +
-	"Construye uno de estos para empezar a extraer Azul.",
-	
-	"Ahora que tienes los 3 colores básicos, puedes hacer las otras mezcladoras\n" +
-	"Alterna usando la rueda del mouse para construir una mezcladora Cian y una Magenta.",
-	
-	"Por último, usando Amarillo, Cian y Magenta puedes producir Blanco\n" +
-	"Presiona 5 para construir la fábrica Blanca definitiva."
-]
-#endregion
 //Definición de mundo
 for(var c = 0; c < array_length(background); c++){
 	var temp_recurso = ds_grid_create(xsize, ysize)
@@ -175,26 +149,3 @@ for(var c = 0; c < array_length(background); c++){
 for(var a = floor(xsize / 2) - 1; a <= ceil(xsize / 2) + 1; a++)
 	for(var b = floor(ysize / 2) - 1; b <= ceil(ysize / 2) + 1; b++)
 		add_edificio(0, a, b)
-//Portales
-repeat(4){
-	do var a = irandom(xsize - 1), b = irandom(ysize - 1)
-	until not bool_edificio[0][# a, b] and not bool_edificio[1][# a, b]
-	add_edificio(10, a, b, 0)
-	add_edificio(10, a, b, 1)
-	do{
-		a = irandom(xsize - 1)
-		b = irandom(ysize - 1)
-	}
-	until not bool_edificio[1][# a, b] and not bool_edificio[2][# a, b]
-	add_edificio(10, a, b, 1)
-	add_edificio(10, a, b, 2)
-}
-//Micelios iniciales
-repeat(5){
-	do var a = irandom_range(1, xsize - 2), b = irandom_range(1, ysize - 2), capa = irandom_range(1, array_length(background) - 1)
-	until not bool_edificio[capa][# a, b]
-	add_micelio(a, b, capa)
-	var next_x = [-1, 0, 1, 0], next_y = [0, -1, 0, 1]
-	for(var c = 0; c < 4; c++)
-		add_micelio(a + next_x[c], b + next_y[c], capa)
-}

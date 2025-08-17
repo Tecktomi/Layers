@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_sprite_uwu",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_sprite_uwu",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

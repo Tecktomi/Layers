@@ -5,11 +5,11 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			flag = false
 		if in(index, 8, 9) and capa = 2
 			flag = false
-		if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 9, 10) and rss[edificio_precio[index]] < 1
+		if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 9) and rss[edificio_precio[index]] < valor_edificios and image_index > 0
 			flag = false
 		if flag and not bool_edificio[capa][# a, b] and not micelio[capa][# a, b] or (bool_edificio[capa][# a, b] and in(id_edificio[capa][# a, b].index, 8, 9) and index = id_edificio[capa][# a, b].index + 6){
 			if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 10)
-				rss[edificio_precio[index]]--
+				rss[edificio_precio[index]] -= valor_edificios
 			if bool_edificio[capa][# a, b] and in(id_edificio[capa][# a, b].index, 8, 9) and index = id_edificio[capa][# a, b].index + 6
 				delete_edificio(a, b, capa)
 			var edificio = null_edificio
@@ -37,7 +37,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 			for(var d = 0; d < array_length(recurso_nombre); d++)
 				if edificio_colores[index, d] for(var c = 0; c < 4; c++){
 					var aa = a + next_x[c], bb = b + next_y[c]
-					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and bool_edificio[capa][# aa, bb] and not in(index, 0, 10){
+					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and bool_edificio[capa][# aa, bb] and not in(index, 0){
 						var temp_edificio = id_edificio[capa][# aa, bb]
 						if edificio_colores[temp_edificio.index, d]{
 							if in(temp_edificio.index, 1, 2, 3, 4, 5, 6, 7){

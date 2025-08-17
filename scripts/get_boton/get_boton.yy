@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_boton",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_boton",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
