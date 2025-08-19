@@ -17,6 +17,7 @@
     {"name":"get_boton","order":41,"path":"scripts/get_boton/get_boton.yy",},
     {"name":"in","order":6,"path":"scripts/in/in.yy",},
     {"name":"update_eficiencia","order":27,"path":"scripts/update_eficiencia/update_eficiencia.yy",},
+    {"name":"Sound1","order":48,"path":"sounds/Sound1/Sound1.yy",},
     {"name":"spr_base","order":5,"path":"sprites/spr_base/spr_base.yy",},
     {"name":"spr_camino_color","order":24,"path":"sprites/spr_camino_color/spr_camino_color.yy",},
     {"name":"spr_camino","order":4,"path":"sprites/spr_camino/spr_camino.yy",},

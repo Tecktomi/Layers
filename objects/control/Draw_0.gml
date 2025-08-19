@@ -6,7 +6,7 @@ if menu > 0{
 	if menu = 1{
 		draw_set_halign(fa_center)
 		draw_set_font(letra_titulo)
-		draw_text(room_width/2, 100, "L A Y E R S")
+		draw_text(room_width / 2, 100, "L A Y E R S")
 		draw_set_color(layer_color_recurso[0])
 		if get_boton(room_width / 2, 200, "Jugar"){
 			image_index = 0
@@ -34,6 +34,16 @@ if menu > 0{
 				for(var c = 0; c < 4; c++)
 					add_micelio(a + next_x[c], b + next_y[c], capa)
 			}
+			//Recursos
+			for(var c = 0; c < array_length(background); c++)
+				repeat(total_betas){
+					var a = irandom_range(4, xsize - 5), b = irandom_range(4, ysize - 5)
+					repeat(tamano_betas){
+						a = clamp(a + irandom_range(-1, 1), 0, xsize - 1)
+						b = clamp(b + irandom_range(-1, 1), 0, ysize - 1)
+						ds_grid_set_region(recurso[c], max(a - 1, 0), max(b - 1, 0), min(a + 1, xsize - 1), min(b + 1, ysize - 1), true)
+					}
+				}
 		}
 		draw_set_font(letra)
 		draw_text(room_width / 2, 260, $"Micelio inicial: {total_micelios}")
@@ -44,12 +54,16 @@ if menu > 0{
 		micelio_iteraciones = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 360, 4, 30, round(micelio_iteraciones), 3))
 		draw_text(room_width / 2, 380, $"Precio Edificios: {valor_edificios}")
 		valor_edificios = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 400, 1, 5, round(valor_edificios), 4))
+		draw_text(room_width / 2, 420, $"Depósitos de Recursos: {total_betas}")
+		total_betas = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 440, 1, 6, round(total_betas), 5))
+		draw_text(room_width / 2, 460, $"Tamaño de Depósitos de Recursos: {tamano_betas}")
+		tamano_betas = round(draw_deslizante(room_width / 2 - 100, room_width / 2 + 100, 480, 10, 40, round(tamano_betas), 6))
 		draw_set_color(layer_color_recurso[0])
 		draw_set_font(letra_titulo)
-		if get_boton(room_width / 2, 440, "¿Cómo jugar?")
+		if get_boton(room_width / 2, 520, "¿Cómo jugar?")
 			menu = 2
 	}
-	else{
+	else if menu < 10{
 		draw_set_halign(fa_left)
 		draw_set_font(letra_titulo)
 		draw_text(20, 20, "¿Cómo Jugar?")
@@ -141,10 +155,32 @@ if menu > 0{
 		if get_boton(room_width / 2, room_height - 60, "Volver")
 			menu = 1
 	}
+	else if menu = 10{
+		draw_set_halign(fa_center)
+		draw_set_font(letra_titulo)
+		draw_text(room_width / 2, 100, "Has Perdido\n\nEl micelio ha llegado a la base")
+		draw_set_halign(fa_center)
+		draw_set_color(layer_color_recurso[0])
+		if get_boton(room_width / 2, room_height - 60, "Volver")
+			game_restart()
+		
+	}
+	else if menu = 11{
+		draw_set_halign(fa_center)
+		draw_set_font(letra_titulo)
+		draw_text(room_width / 2, 100, "Has Ganado\n\nHas destruido todo el micelio")
+		draw_set_halign(fa_center)
+		draw_set_color(layer_color_recurso[0])
+		if get_boton(room_width / 2, room_height - 120, "Continuar Jugando")
+			menu = 0
+		draw_set_color(layer_color_recurso[0])
+		if get_boton(room_width / 2, room_height - 60, "Salir")
+			game_restart()
+	}
 	draw_set_font(letra)
 	draw_set_valign(fa_bottom)
 	draw_set_halign(fa_left)
-	draw_text(0, room_height, "Versión: 1.0.0")
+	draw_text(0, room_height, "Versión: 1.0.1")
 	draw_set_halign(fa_right)
 	draw_text(room_width, room_height, "Por Tomás Ramdohr")
 	draw_set_valign(fa_top)
@@ -155,37 +191,83 @@ if menu > 0{
 	exit
 }
 //Actualizar fondo
-for(var c = 0; c < array_length(background); c++){
-	if background[c] = undefined{
-		var surf = surface_create(xsize * 16, ysize * 16)
-		surface_set_target(surf)
+if d3{
+	var xx = room_width / 2, yy = 60
+	for(var c = 0; c < array_length(background); c++){
+		yy -= 20
+		draw_set_alpha(0.2)
 		draw_set_color(layer_color_background[c])
-		draw_rectangle(0, 0, xsize * 16, ysize * 16, false)
+		draw_triangle(xx, yy, xx + xsize * 16, yy + xsize * 8, xx + (xsize - ysize)* 16, yy + (xsize + ysize) * 8, false)
+		draw_triangle(xx, yy, xx - ysize * 16, yy + ysize * 8, xx + (xsize - ysize)* 16, yy + (xsize + ysize) * 8, false)
+		draw_set_alpha(0.5)
+		draw_set_color(c_black)
+		for(var a = 0; a < xsize; a++)
+			draw_line(xx + a * 16, yy + a * 8, xx + (a - ysize) * 16, yy + (a + ysize) * 8)
+		for(var a = 0; a < ysize; a++)
+			draw_line(xx - a * 16, yy + a * 8, xx + (xsize - a) * 16, yy + (xsize + a) * 8)
 		draw_set_color(layer_color_recurso[c])
 		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++)
-				if recurso[c][# a, b]
-					draw_rectangle(a * 16, b * 16, a * 16 + 15, b * 16 + 15, false)
-		background[c] = sprite_create_from_surface(surf, 0, 0, xsize * 16, ysize * 16, false, false, 0, 0)
+			for(var b = 0; b < ysize; b++){
+				if recurso[c][# a, b]{
+					draw_set_color(layer_color_recurso[c])
+					draw_triangle(xx + (a - b) * 16, yy + (a + b) * 8, xx + (a + 1 - b) * 16, yy + (a + 1 + b) * 8, xx + (a - b) * 16, yy + (a + b + 2) * 8, false)
+					draw_triangle(xx + (a - b) * 16, yy + (a + b) * 8, xx + (a - b - 1) * 16, yy + (a + 1 + b) * 8, xx + (a - b) * 16, yy + (a + b + 2) * 8, false)
+				}
+				if bool_edificio[c][# a, b]{
+					draw_set_color(edificio_3d_color[id_edificio[c][# a, b].index])
+					draw_triangle(xx + (a - b) * 16, yy + (a + b) * 8, xx + (a + 1 - b) * 16, yy + (a + 1 + b) * 8, xx + (a - b) * 16, yy + (a + b + 2) * 8, false)
+					draw_triangle(xx + (a - b) * 16, yy + (a + b) * 8, xx + (a - b - 1) * 16, yy + (a + 1 + b) * 8, xx + (a - b) * 16, yy + (a + b + 2) * 8, false)
+				}
+				else if micelio[c][# a, b] > 0{
+					draw_set_color(c_purple)
+					draw_triangle(xx + (a - b) * 16, yy + (a + b) * 8, xx + (a + 1 - b) * 16, yy + (a + 1 + b) * 8, xx + (a - b) * 16, yy + (a + b + 2) * 8, false)
+					draw_triangle(xx + (a - b) * 16, yy + (a + b) * 8, xx + (a - b - 1) * 16, yy + (a + 1 + b) * 8, xx + (a - b) * 16, yy + (a + b + 2) * 8, false)
+				}
+			}
+	}
+	draw_set_alpha(1)
+}
+else{
+	for(var c = 0; c < array_length(background); c++){
+		if background[c] = undefined{
+			var surf = surface_create(xsize * 16, ysize * 16)
+			surface_set_target(surf)
+			draw_set_color(layer_color_background[c])
+			draw_rectangle(0, 0, xsize * 16, ysize * 16, false)
+			draw_set_color(layer_color_recurso[c])
+			for(var a = 0; a < xsize; a++)
+				for(var b = 0; b < ysize; b++)
+					if recurso[c][# a, b]
+						draw_rectangle(a * 16, b * 16, a * 16 + 15, b * 16 + 15, false)
+			background[c] = sprite_create_from_surface(surf, 0, 0, xsize * 16, ysize * 16, false, false, 0, 0)
+			surface_reset_target()
+			surface_free(surf)
+		}
+	}
+	draw_sprite_stretched(background[current_layer], 0, -camx, -camy, xsize * camzoom, ysize * camzoom)
+	//Dibujo de edificios y micelio
+	if background_edificio[current_layer] = undefined{
+		var surf = surface_create(xsize * 16, ysize * 16)
+		surface_set_target(surf)
+		for(var a = 0; a < xsize; a++)
+			for(var b = 0; b < ysize; b++){
+				if bool_edificio[current_layer][# a, b]{
+					var edificio = id_edificio[current_layer][# a, b]
+					draw_sprite(edificio_sprite[edificio.index], edificio.subsprite, a * 16, b * 16)
+					if in(edificio.index, 1, 2, 3, 4, 5, 6, 7)
+						draw_sprite_ext(spr_camino_color, edificio.subsprite, a * 16, b * 16, 1, 1, 0, recurso_color[edificio.index - 1], 1)
+				}
+				else if micelio[current_layer][# a, b] = 1
+					draw_sprite(spr_micelio_1, micelio_subsprite[current_layer][# a, b], a * 16, b * 16)
+				else if micelio[current_layer][# a, b] = 2
+					draw_sprite(spr_micelio_2, 0, a * 16, b * 16)
+			}
+		background_edificio[current_layer] = sprite_create_from_surface(surf, 0, 0, xsize * 16, ysize * 16, false, false, 0, 0)
 		surface_reset_target()
 		surface_free(surf)
 	}
+	draw_sprite_stretched(background_edificio[current_layer], 0, -camx, -camy, xsize * camzoom, ysize * camzoom)
 }
-draw_sprite(background[current_layer], 0, 0, 0)
-//Dibujo de edificios y micelio
-for(var a = 0; a < xsize; a++)
-	for(var b = 0; b < ysize; b++){
-		if bool_edificio[current_layer][# a, b]{
-			var edificio = id_edificio[current_layer][# a, b]
-			draw_sprite(edificio_sprite[edificio.index], edificio.subsprite, a * 16, b * 16)
-			if in(edificio.index, 1, 2, 3, 4, 5, 6, 7)
-				draw_sprite_ext(spr_camino_color, edificio.subsprite, a * 16, b * 16, 1, 1, 0, recurso_color[edificio.index - 1], 1)
-		}
-		else if micelio[current_layer][# a, b] = 1
-			draw_sprite(spr_micelio_1, micelio_subsprite[current_layer][# a, b], a * 16, b * 16)
-		else if micelio[current_layer][# a, b] = 2
-			draw_sprite(spr_micelio_2, 0, a * 16, b * 16)
-	}
 //Mostrar recursos
 var temp_text = ""
 for(var a = 0; a < array_length(recurso_nombre); a++)
@@ -248,9 +330,9 @@ for(var a = 0; a < array_length(background); a++)
 			b--
 		}
 		if current_layer = a
-			draw_sprite(spr_dron, 0, aa, bb)
+			draw_sprite_stretched(spr_dron, 0, aa - camx, bb - camy, 32, 32)
 	}
-var mx = floor(mouse_x / 16), my = floor(mouse_y / 16)
+var mx = clamp(floor((mouse_x + camx) / 32), 0, xsize - 1), my = clamp(floor((mouse_y + camy) / 32), 0, ysize - 1)
 //Información previa de red
 if bool_edificio[current_layer][# mx, my]{
 	var edificio = id_edificio[current_layer][# mx, my]
@@ -277,6 +359,16 @@ if bool_edificio[current_layer][# mx, my]{
 				if temp_array[a] > 0
 					temp_text += $"    {edificio_nombre[a]}: {temp_array[a]}\n"
 		}
+	if mouse_check_button_pressed(mb_left) and edificio.index = 10{
+		if edificio.subsprite = 2{
+			current_layer = 1 - current_layer
+			mouse_clear(mb_left)
+		}
+		if edificio.subsprite = 4{
+			current_layer = 3 - current_layer
+			mouse_clear(mb_left)
+		}
+	}
 }
 draw_set_color(c_black)
 draw_text(0, 0, temp_text)
@@ -333,7 +425,7 @@ if build_select > 0{
 	if micelio[current_layer][# mx, my] > 0
 		fail_text += "No se puede construir sobre Micelio\n"
 	if fail_text != ""
-		draw_text((mx + 1) * 16, my * 16, fail_text)
+		draw_text((mx + 1) * camzoom - camx, my * camzoom - camy, fail_text)
 	if mouse_check_button_pressed(mb_left){
 		if not in(build_select, 0, 10){
 			build_x = mx
@@ -355,16 +447,16 @@ if build_select > 0{
 	if not in(build_select, 0, 10) and mouse_check_button(mb_left){
 		if abs(build_x - mx) > abs(build_y - my){
 			for(var a = min(build_x, mx); a <= max(build_x, mx); a++)
-				draw_sprite(edificio_sprite[build_select], 0, a * 16, build_y * 16)
+				draw_sprite_stretched(edificio_sprite[build_select], 0, a * camzoom - camx, build_y * camzoom - camy, 32, 32)
 		}
 		else for(var a = min(build_y, my); a <= max(build_y, my); a++)
-			draw_sprite(edificio_sprite[build_select], 0, build_x * 16, a * 16)
+			draw_sprite_stretched(edificio_sprite[build_select], 0, build_x * camzoom - camx, a * camzoom - camy, 32, 32)
 	}
 	else{
-		draw_sprite_ext(edificio_sprite[build_select], 0, mx * 16, my * 16, 1, 1, 0, c_white, 0.5)
+		draw_sprite_ext(edificio_sprite[build_select], 0, mx * camzoom - camx, my * camzoom - camy, 2, 2, 0, c_white, 0.5)
 		if in(build_select, 1, 2, 3, 4, 5, 6, 7){
 			var color = [c_red, c_green, c_blue, c_yellow, c_fuchsia, c_aqua, c_white]
-			draw_sprite_ext(spr_camino_color, 0, mx * 16, my * 16, 1, 1, 0, color[build_select - 1], 0.5)
+			draw_sprite_ext(spr_camino_color, 0, mx * camzoom - camx, my * camzoom - camy, 2, 2, 0, color[build_select - 1], 0.5)
 		}
 	}
 	if mouse_check_button_pressed(mb_right){
@@ -405,19 +497,47 @@ if keyboard_check_pressed(vk_anykey){
 	}
 	if keyboard_check_pressed(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
+	if keyboard_check_pressed(vk_f5)
+		d3 = not d3
 }
 if mouse_check_button_pressed(mb_right){
-	if bool_edificio[current_layer][# mx, my]{
-		var edificio = id_edificio[current_layer][# mx, my]
-		if not in(edificio.index, 0, 10) or (rss[6] >= valor_edificios and edificio.index = 10) or modo_hacker{
-			if edificio.index = 10 and not modo_hacker
-				rss[6] -= valor_edificios
-			delete_edificio(mx, my)
-		}
-	}
+	delete_bool = true
+	delete_x = mx
+	delete_y =  my
 	if modo_hacker and micelio[current_layer][# mx, my] > 0
 		delete_micelio(mx, my, current_layer)
 }
+if delete_bool{
+	var minx = min(delete_x, mx), miny = min(delete_y, my), maxx = max(delete_x, mx), maxy = max(delete_y, my)
+	draw_set_color(c_black)
+	draw_set_alpha(0.5)
+	draw_rectangle(minx * camzoom - camx, miny * camzoom - camy, (maxx + 1) * camzoom - camx, (maxy + 1) * camzoom - camy, false)
+	draw_set_alpha(1)
+	draw_rectangle(minx * camzoom - camx, miny * camzoom - camy, (maxx + 1) * camzoom - camx, (maxy + 1) * camzoom - camy, true)
+	if mouse_check_button_released(mb_right){
+		delete_bool = false
+		for(var a = minx; a <= maxx; a++)
+			for(var b = miny; b <= maxy; b++)
+				if bool_edificio[current_layer][# a, b]{
+					var edificio= id_edificio[current_layer][# a, b]
+					if not in(edificio.index, 0, 10)  or (rss[6] >= valor_edificios and edificio.index = 10) or modo_hacker{
+						if edificio.index = 10 and not modo_hacker
+							rss[6] -= valor_edificios
+						delete_edificio(a, b)
+					}
+				}
+	}
+}
+#region Camara
+	if mouse_x > room_width - 20 or keyboard_check(ord("D"))
+		camx = min(xsize * 16, camx + 4 + 12 * keyboard_check(vk_lshift))
+	if mouse_x < 20 or keyboard_check(ord("A"))
+		camx = max(0, camx - 4 - 12 * keyboard_check(vk_lshift))
+	if mouse_y > room_height - 20 or keyboard_check(ord("S"))
+		camy = min(ysize * 16, camy + 4 + 12 * keyboard_check(vk_lshift))
+	if mouse_y < 20 or keyboard_check(ord("W"))
+		camy = max(0, camy - 4 - 12 * keyboard_check(vk_lshift))
+#endregion
 //Crecimiento de micelio
 repeat(micelio_iteraciones){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1), capa = irandom(array_length(background) - 1)

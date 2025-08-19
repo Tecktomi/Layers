@@ -8,6 +8,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 		if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 9) and rss[edificio_precio[index]] < valor_edificios and image_index > 0
 			flag = false
 		if flag and not bool_edificio[capa][# a, b] and not micelio[capa][# a, b] or (bool_edificio[capa][# a, b] and in(id_edificio[capa][# a, b].index, 8, 9) and index = id_edificio[capa][# a, b].index + 6){
+			background_edificio[capa] = undefined
 			if not modo_hacker and not in(index, 0, 1, 2, 3, 4, 5, 6, 7, 10)
 				rss[edificio_precio[index]] -= valor_edificios
 			if bool_edificio[capa][# a, b] and in(id_edificio[capa][# a, b].index, 8, 9) and index = id_edificio[capa][# a, b].index + 6
@@ -56,6 +57,7 @@ function add_edificio(index, a, b, capa = control.current_layer){
 					}
 				//Detectar conexiones por portales
 				if index = 10{
+					edificio.subsprite = 1 + 2 * capa
 					if capa > 0 and bool_edificio[capa - 1][# a, b]{
 						var temp_edificio = id_edificio[capa - 1][# a, b]
 						if temp_edificio.index = 10 and not ds_list_contains(temp_redes[d], temp_edificio.red[d])
@@ -65,6 +67,62 @@ function add_edificio(index, a, b, capa = control.current_layer){
 						var temp_edificio = id_edificio[capa + 1][# a, b]
 						if temp_edificio.index = 10 and not ds_list_contains(temp_redes[d], temp_edificio.red[d])
 							ds_list_add(temp_redes[d], temp_edificio.red[d])
+					}
+				}
+			}
+			//Colores Túneles
+			if index = 10{
+				if capa = 1 and bool_edificio[0][# a, b] and id_edificio[0][# a, b].index = 10 and bool_edificio[2][# a, b] and id_edificio[2][# a, b].index = 10{
+					edificio.subsprite = 0
+					id_edificio[0][# a, b].subsprite = 0
+					id_edificio[2][# a, b].subsprite = 0
+					background_edificio[0] = undefined
+					background_edificio[2] = undefined
+				}
+				else{
+					if capa > 0 and bool_edificio[capa - 1][# a, b]{
+						var temp_edificio = id_edificio[capa - 1][# a, b]
+						if temp_edificio.index = 10{
+							background_edificio[capa - 1] = undefined
+							if capa = 1{
+								edificio.subsprite = 2
+								temp_edificio.subsprite = 2
+							}
+							else if capa = 2{
+								if temp_edificio.subsprite = 2{
+									edificio.subsprite = 0
+									temp_edificio.subsprite = 0
+									id_edificio[0][# a, b].subsprite = 0
+									background_edificio[0] = undefined
+								}
+								else{
+									edificio.subsprite = 4
+									temp_edificio.subsprite = 4
+								}
+							}
+						}
+					}
+					if capa < array_length(background) - 1 and bool_edificio[capa + 1][# a, b]{
+						var temp_edificio = id_edificio[capa + 1][# a, b]
+						if temp_edificio.index = 10{
+							background_edificio[capa + 1] = undefined
+							if capa = 1{
+								edificio.subsprite = 4
+								temp_edificio.subsprite = 4
+							}
+							else if capa = 0{
+								if temp_edificio.subsprite = 4{
+									edificio.subsprite = 0
+									temp_edificio.subsprite = 0
+									id_edificio[2][# a, b].subsprite = 0
+									background_edificio[2] = undefined
+								}
+								else{
+									edificio.subsprite = 2
+									temp_edificio.subsprite = 2
+								}
+							}
+						}
 					}
 				}
 			}

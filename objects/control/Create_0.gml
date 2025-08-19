@@ -11,24 +11,35 @@ modo_hacker = false
 last_path = 1
 flag_update_eficiencia = false
 menu = 1
+d3 = false
 background = [undefined, undefined, undefined]
+background_edificio = [undefined, undefined, undefined]
 current_layer = 0
 total_micelios = 3
 total_portales = 4
+total_betas = 4
+tamano_betas = 20
 valor_edificios = 2
 deslizante_index = 0
+delete_x = 0
+delete_y = 0
+camx = xsize * 8
+camy = ysize * 8
+camzoom = 32
+delete_bool = false
 layer_color_background = [make_color_rgb(255, 127, 127), make_color_rgb(127, 255, 127), make_color_rgb(127, 127, 255)]
 layer_color_recurso = [c_red, c_green, c_blue]
 edificio_nombre = []
 edificio_sprite = []
 edificio_precio = []
 edificio_colores = []
+edificio_3d_color = []
 recurso_nombre = ["Rojo", "Verde", "Azul", "Amarillo", "Magenta", "Cian", "Blanco"]
 recurso_color = [c_red, c_green, c_blue, c_yellow, c_fuchsia, c_aqua, c_white]
 for(var a = array_length(recurso_nombre) - 1; a >= 0; a--)
 	rss[a] = 0
 rss[0] = 10
-function def_edificio (nombre, sprite = spr_base, precio = 0, colores = [0]){
+function def_edificio (nombre, sprite = spr_base, precio = 0, colores = [0], d3_color = c_white){
 	array_push(edificio_nombre, string(nombre))
 	array_push(edificio_sprite, sprite)
 	array_push(edificio_precio, precio)
@@ -36,30 +47,31 @@ function def_edificio (nombre, sprite = spr_base, precio = 0, colores = [0]){
 	for(var a = 0; a < array_length(colores); a++)
 		temp_colores[colores[a]] = true
 	array_push(edificio_colores, temp_colores)
+	array_push(edificio_3d_color, d3_color)
 }
-def_edificio("Base", spr_base, 0, [0, 1, 2, 3, 4, 5, 6])
-def_edificio("Camino Rojo", spr_camino, 0, [0])
-def_edificio("Camino Verde", spr_camino, 0, [1])
-def_edificio("Camino Azul", spr_camino, 0, [2])
-def_edificio("Camino Amarillo", spr_camino, 0, [3])
-def_edificio("Camino Magenta", spr_camino, 0, [4])
-def_edificio("Camino Cian", spr_camino, 0, [5])
-def_edificio("Camino Blanco", spr_camino, 0, [6])
+def_edificio("Base", spr_base, 0, [0, 1, 2, 3, 4, 5, 6], c_white)
+def_edificio("Camino Rojo", spr_camino, 0, [0], c_red)
+def_edificio("Camino Verde", spr_camino, 0, [1], c_green)
+def_edificio("Camino Azul", spr_camino, 0, [2], c_blue)
+def_edificio("Camino Amarillo", spr_camino, 0, [3], c_yellow)
+def_edificio("Camino Magenta", spr_camino, 0, [4], c_fuchsia)
+def_edificio("Camino Cian", spr_camino, 0, [5], c_aqua)
+def_edificio("Camino Blanco", spr_camino, 0, [6], c_white)
 //8
-def_edificio("Extractor Rojo", spr_extractor_rojo, 0, [0])
-def_edificio("Extractor Verde", spr_extractor_verde, 0, [1])
-def_edificio("Tunel", spr_tunel, 6, [0, 1, 2, 3, 4, 5, 6])
+def_edificio("Extractor Rojo", spr_extractor_rojo, 0, [0], c_red)
+def_edificio("Extractor Verde", spr_extractor_verde, 0, [1], c_green)
+def_edificio("Tunel", spr_tunel, 6, [0, 1, 2, 3, 4, 5, 6], c_white)
 //11
-def_edificio("Forja Amarilla", spr_forja_amarillo, 1, [0, 1, 3])
-def_edificio("Forja Magenta", spr_forja_magenta, 2, [0, 2, 4])
-def_edificio("Forja Cian", spr_forja_cian, 2, [1, 2, 5])
+def_edificio("Forja Amarilla", spr_forja_amarillo, 1, [0, 1, 3], c_yellow)
+def_edificio("Forja Magenta", spr_forja_magenta, 2, [0, 2, 4], c_fuchsia)
+def_edificio("Forja Cian", spr_forja_cian, 2, [1, 2, 5], c_aqua)
 //14
-def_edificio("Taladro Mejorado Rojo", spr_taladro_mejorado_rojo, 3, [0])
-def_edificio("Taladro Mejorado Verde", spr_taladro_mejorado_verde, 3, [0, 1])
-def_edificio("Taladro Mejorado Azul", spr_taladro_mejorado_azul, 3, [0, 2])
+def_edificio("Taladro Mejorado Rojo", spr_taladro_mejorado_rojo, 3, [0], c_red)
+def_edificio("Taladro Mejorado Verde", spr_taladro_mejorado_verde, 3, [0, 1], c_green)
+def_edificio("Taladro Mejorado Azul", spr_taladro_mejorado_azul, 3, [0, 2], c_blue)
 //17
-def_edificio("Fábrica Blanca", spr_fabrica_blanca, 4, [3, 4, 5, 6])
-def_edificio("Fábrica de Drones", spr_cian, 5, [5])
+def_edificio("Fábrica Blanca", spr_fabrica_blanca, 4, [3, 4, 5, 6], c_white)
+def_edificio("Fábrica de Drones", spr_cian, 5, [5], c_aqua)
 null_edificio = {
 	a : 0,
 	b : 0,
@@ -135,15 +147,6 @@ for(var c = 0; c < array_length(background); c++){
 	var temp_micelio_tick = ds_grid_create(xsize, ysize)
 	ds_grid_clear(temp_micelio_tick, 0)
 	micelio_tick[c] = temp_micelio_tick
-	//Recursos
-	repeat(4){
-		var a = irandom(xsize - 1), b = irandom(ysize - 1)
-		repeat(20){
-			a = clamp(a + irandom_range(-1, 1), 0, xsize - 1)
-			b = clamp(b + irandom_range(-1, 1), 0, ysize - 1)
-			ds_grid_set_region(recurso[c], max(a - 1, 0), max(b - 1, 0), min(a + 1, xsize - 1), min(b + 1, ysize - 1), true)
-		}
-	}
 }
 //Base
 for(var a = floor(xsize / 2) - 1; a <= ceil(xsize / 2) + 1; a++)
