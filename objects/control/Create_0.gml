@@ -12,8 +12,12 @@ last_path = 1
 flag_update_eficiencia = false
 menu = 1
 d3 = false
+minimapa = true
+minimapa_pressed = false
 background = [undefined, undefined, undefined]
 background_edificio = [undefined, undefined, undefined]
+minimapa_sprite = [undefined, undefined, undefined]
+bool_refresh_layer = [false, false, false]
 current_layer = 0
 total_micelios = 3
 total_portales = 4
@@ -27,6 +31,9 @@ camx = xsize * 8
 camy = ysize * 8
 camzoom = 32
 delete_bool = false
+tiempo = 0
+micelio_muerto = 0
+edificios_construidos = 0
 layer_color_background = [make_color_rgb(255, 127, 127), make_color_rgb(127, 255, 127), make_color_rgb(127, 127, 255)]
 layer_color_recurso = [c_red, c_green, c_blue]
 edificio_nombre = []
@@ -72,6 +79,14 @@ def_edificio("Taladro Mejorado Azul", spr_taladro_mejorado_azul, 3, [0, 2], c_bl
 //17
 def_edificio("Fábrica Blanca", spr_fabrica_blanca, 4, [3, 4, 5, 6], c_white)
 def_edificio("Fábrica de Drones", spr_cian, 5, [5], c_aqua)
+//19
+def_edificio("Infinito Rojo", spr_base, 0, [0], c_red)
+def_edificio("Infinito Verde", spr_base, 0, [1], c_green)
+def_edificio("Infinito Azul", spr_base, 0, [2], c_blue)
+def_edificio("Infinito Amarillo", spr_base, 0, [3], c_yellow)
+def_edificio("Infinito Magenta", spr_base, 0, [4], c_fuchsia)
+def_edificio("Infinito Cian", spr_base, 0, [5], c_aqua)
+def_edificio("Infinito Blanco", spr_base, 0, [6], c_white)
 null_edificio = {
 	a : 0,
 	b : 0,

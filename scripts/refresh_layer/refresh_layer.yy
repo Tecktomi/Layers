@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"refresh_layer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"refresh_layer",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

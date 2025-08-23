@@ -3,14 +3,14 @@ function update_eficiencia(){
 		//Red Rojo
 		for(var a = 0; a < ds_list_size(redes_recurso[0]); a++){
 			var red = redes_recurso[0][|a]
-			red.produccion = ds_list_size(red.edificios_index[8]) + 2 * ds_list_size(red.edificios_index[14])
+			red.produccion = ds_list_size(red.edificios_index[8]) + 2 * ds_list_size(red.edificios_index[14]) + 999 * ds_list_size(red.edificios_index[19])
 			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[15]) + ds_list_size(red.edificios_index[16])
 			calcular_eficiencia(red)
 		}
 		//Red Verde
 		for(var a = 0; a < ds_list_size(redes_recurso[1]); a++){
 			var red = redes_recurso[1][|a]
-			red.produccion = ds_list_size(red.edificios_index[9])
+			red.produccion = ds_list_size(red.edificios_index[9]) + 999 * ds_list_size(red.edificios_index[20])
 			for(var b = 0; b < ds_list_size(red.edificios_index[15]); b++){
 				var edificio = red.edificios_index[15][|b]
 				edificio.produccion = 2 * edificio.red[0].eficiencia
@@ -22,7 +22,7 @@ function update_eficiencia(){
 		//Red Azul
 		for(var a = 0; a < ds_list_size(redes_recurso[2]); a++){
 			var red = redes_recurso[2][|a]
-			red.produccion = 0
+			red.produccion = 999 * ds_list_size(red.edificios_index[21])
 			for(var b = 0; b < ds_list_size(red.edificios_index[16]); b++){
 				var edificio = red.edificios_index[16][|b]
 				edificio.produccion = 2 * edificio.red[0].eficiencia
@@ -34,7 +34,7 @@ function update_eficiencia(){
 		//Red Amarillo
 		for(var a = 0; a < ds_list_size(redes_recurso[3]); a++){
 			var red = redes_recurso[3][|a]
-			red.produccion = 0
+			red.produccion = 999 * ds_list_size(red.edificios_index[22])
 			for(var b = 0; b < ds_list_size(red.edificios_index[11]); b++){
 				var edificio = red.edificios_index[11][|b]
 				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[1].eficiencia)
@@ -46,7 +46,7 @@ function update_eficiencia(){
 		//Red Magenta
 		for(var a = 0; a < ds_list_size(redes_recurso[4]); a++){
 			var red = redes_recurso[4][|a]
-			red.produccion = 0
+			red.produccion = 999 * ds_list_size(red.edificios_index[23])
 			for(var b = 0; b < ds_list_size(red.edificios_index[12]); b++){
 				var edificio = red.edificios_index[12][|b]
 				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[2].eficiencia)
@@ -58,7 +58,7 @@ function update_eficiencia(){
 		//Red Cian
 		for(var a = 0; a < ds_list_size(redes_recurso[5]); a++){
 			var red = redes_recurso[5][|a]
-			red.produccion = 0
+			red.produccion = 999 * ds_list_size(red.edificios_index[24])
 			for(var b = 0; b < ds_list_size(red.edificios_index[13]); b++){
 				var edificio = red.edificios_index[13][|b]
 				edificio.produccion = min(edificio.red[1].eficiencia, edificio.red[2].eficiencia)
@@ -70,7 +70,7 @@ function update_eficiencia(){
 		//Red Blanco
 		for(var a = 0; a < ds_list_size(redes_recurso[6]); a++){
 			var red = redes_recurso[6][|a]
-			red.produccion = 0
+			red.produccion = 999 * ds_list_size(red.edificios_index[25])
 			for(var b = 0; b < ds_list_size(red.edificios_index[17]); b++){
 				var edificio = red.edificios_index[17][|b]
 				edificio.produccion = min(edificio.red[3].eficiencia, edificio.red[4].eficiencia, edificio.red[5].eficiencia)

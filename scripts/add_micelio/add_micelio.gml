@@ -1,13 +1,15 @@
 function add_micelio(a, b, capa, portal = false){
 	with control{
-		background_edificio[capa] = undefined
+		bool_refresh_layer[capa] = true
 		var next_x = [-1, 0, 1, 0], next_y = [0, -1, 0, 1]
 		if a >= 0 and b >= 0 and a < xsize and b < ysize and micelio[capa][# a, b] < 1 and (image_index = 0 or (image_index - micelio_tick[capa][# a, b]) / 60 > 10){
 			//Destruir edificios
 			if bool_edificio[capa][# a, b]{
 				var edificio = id_edificio[capa][# a, b]
-				if edificio.index = 0
+				if edificio.index = 0{
 					menu = 10
+					tiempo = image_index / 60
+				}
 				//Mover micelio a travez de portales
 				if not portal and edificio.index = 10{
 					if capa > 0 and bool_edificio[capa - 1][# a, b] and id_edificio[capa - 1][# a, b].index = 10

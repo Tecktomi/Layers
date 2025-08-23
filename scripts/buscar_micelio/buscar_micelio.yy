@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"buscar_micelio",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"buscar_micelio",
+  "parent":{
+    "name":"Layers",
+    "path":"Layers.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
