@@ -46,6 +46,40 @@ recurso_color = [c_red, c_green, c_blue, c_yellow, c_fuchsia, c_aqua, c_white]
 for(var a = array_length(recurso_nombre) - 1; a >= 0; a--)
 	rss[a] = 0
 rss[0] = 10
+#region Descripcion
+	edificio_descripcion = [
+	"Depósito de recursos, debes protegerlo a toda costa",
+	"Conecta líneas de producción de recurso Rojo",
+	"Conecta líneas de producción de recurso Verde",
+	"Conecta líneas de producción de recurso Azul",
+	"Conecta líneas de producción de recurso Amarillo",
+	"Conecta líneas de producción de recurso Magenta",
+	"Conecta líneas de producción de recurso Cian",
+	"Conecta líneas de producción de recurso Blanco",
+	"Extrae recurso Rojo",
+	"Extrae recurso Verde",
+	"Conecta capas entre sí",
+	"Combina recursos Rojo y Verde para producir Amarillo",
+	"Combina recursos Rojo y Azul para producir Magenta",
+	"Combina recursos Verde y Azul para producir Cian",
+	"Produce recurso Rojo más rápido",
+	"Produce recurso Verde a partir de Rojo",
+	"Produce recurso Azul a partir de Rojo",
+	"Combina recursos Amarillo, Magenta y Cian para producir Blanco",
+	"Utiliza recurso Cian para producir drones de defensa",
+	"Genera recurso Rojo con magia",
+	"Genera recurso Verde con magia",
+	"Genera recurso Azul con magia",
+	"Genera recurso Amarillo con magia",
+	"Genera recurso Magenta con magia",
+	"Genera recurso Cian con magia",
+	"Genera recurso Blanco con magia",
+	"Explota cuando el Micelio intenta crecer encima",
+	"Produce más recurso Amarillo a partir de Rojo y Verde",
+	"Produce más recurso Magenta a partir de Rojo, Azul y Amarillo",
+	"Produce más recurso Cian a partir de Verde, Azul y Amarillo"
+	]
+#endregion
 function def_edificio (nombre, sprite = spr_base, precio = 0, colores = [0], d3_color = c_white){
 	array_push(edificio_nombre, string(nombre))
 	array_push(edificio_sprite, sprite)
@@ -87,6 +121,11 @@ def_edificio("Infinito Amarillo", spr_base, 0, [3], c_yellow)
 def_edificio("Infinito Magenta", spr_base, 0, [4], c_fuchsia)
 def_edificio("Infinito Cian", spr_base, 0, [5], c_aqua)
 def_edificio("Infinito Blanco", spr_base, 0, [6], c_white)
+//26
+def_edificio("Mina", spr_mina, 4, [], c_fuchsia)
+def_edificio("Fábrica Amarilla", spr_fabrica_amarilla, 6, [0, 1, 3], c_white)
+def_edificio("Fábrica Magenta", spr_fabrica_magenta, 6, [0, 2, 3, 4], c_white)
+def_edificio("Fábrica Cian", spr_fabrica_cian, 6, [1, 2, 3, 5], c_white)
 null_edificio = {
 	a : 0,
 	b : 0,

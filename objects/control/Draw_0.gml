@@ -393,7 +393,7 @@ if modo_hacker{
 }
 //Construir
 if build_select > 0{
-	var fail_text = ""
+	var fail_text = $"{edificio_nombre[build_select]}\n{edificio_descripcion[build_select]}\n\n"
 	if in(build_select, 1, 2, 3, 4, 5, 6, 7){
 		if mouse_wheel_up()
 			build_select = 1 + build_select mod 7
@@ -432,11 +432,21 @@ if build_select > 0{
 		if not recurso[current_layer][# mx, my]
 			fail_text += "Terreno inválido\n"
 	}
+	else if in(build_select, 18, 26){
+		if mouse_wheel_up() or mouse_wheel_down()
+			build_select = 44 - build_select
+	}
 	else if in(build_select, 19, 20, 21, 22, 23, 24, 25){
 		if mouse_wheel_up()
 			build_select = 19 + (build_select + 3) mod 7
 		if mouse_wheel_down()
 			build_select = 19 + (build_select + 1) mod 7
+	}
+	else if in(build_select, 27, 28, 29){
+		if mouse_wheel_up()
+			build_select = 27 + (build_select + 1) mod 3
+		if mouse_wheel_down()
+			build_select = 27 + (build_select - 1) mod 3
 	}
 	if rss[edificio_precio[build_select]] <= valor_edificios and not in(build_select, 1, 2, 3, 4, 5, 6, 7) and not modo_hacker
 		fail_text += $"Insuficiente {recurso_nombre[edificio_precio[build_select]]}\n"
@@ -517,7 +527,9 @@ if keyboard_check_pressed(vk_anykey){
 		build_select = 18
 	if keyboard_check_pressed(ord(7))
 		build_select = 10
-	if keyboard_check_pressed(ord(8)) and modo_hacker
+	if keyboard_check_pressed(ord(8))
+		build_select = 27
+	if keyboard_check_pressed(ord(9)) and modo_hacker
 		build_select = 19
 	if keyboard_check_pressed(vk_escape){
 		if build_select = 0

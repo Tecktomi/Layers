@@ -4,7 +4,7 @@ function update_eficiencia(){
 		for(var a = 0; a < ds_list_size(redes_recurso[0]); a++){
 			var red = redes_recurso[0][|a]
 			red.produccion = ds_list_size(red.edificios_index[8]) + 2 * ds_list_size(red.edificios_index[14]) + 999 * ds_list_size(red.edificios_index[19])
-			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[15]) + ds_list_size(red.edificios_index[16])
+			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[15]) + ds_list_size(red.edificios_index[16]) + ds_list_size(red.edificios_index[27]) + ds_list_size(red.edificios_index[28])
 			calcular_eficiencia(red)
 		}
 		//Red Verde
@@ -16,7 +16,7 @@ function update_eficiencia(){
 				edificio.produccion = 2 * edificio.red[0].eficiencia
 				red.produccion += edificio.produccion
 			}
-			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[13])
+			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[13]) + ds_list_size(red.edificios_index[27]) + ds_list_size(red.edificios_index[29])
 			calcular_eficiencia(red)
 		}
 		//Red Azul
@@ -28,7 +28,7 @@ function update_eficiencia(){
 				edificio.produccion = 2 * edificio.red[0].eficiencia
 				red.produccion += edificio.produccion
 			}
-			red.consumo = ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[13])
+			red.consumo = ds_list_size(red.edificios_index[12]) + ds_list_size(red.edificios_index[13]) + ds_list_size(red.edificios_index[28]) + ds_list_size(red.edificios_index[29])
 			calcular_eficiencia(red)
 		}
 		//Red Amarillo
@@ -40,7 +40,12 @@ function update_eficiencia(){
 				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[1].eficiencia)
 				red.produccion += edificio.produccion
 			}
-			red.consumo = ds_list_size(red.edificios_index[17])
+			for(var b = 0; b < ds_list_size(red.edificios_index[27]); b++){
+				var edificio = red.edificios_index[27][|b]
+				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[1].eficiencia)
+				red.produccion += 2 * edificio.produccion
+			}
+			red.consumo = ds_list_size(red.edificios_index[17]) + ds_list_size(red.edificios_index[28]) + ds_list_size(red.edificios_index[29])
 			calcular_eficiencia(red)
 		}
 		//Red Magenta
@@ -51,6 +56,11 @@ function update_eficiencia(){
 				var edificio = red.edificios_index[12][|b]
 				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[2].eficiencia)
 				red.produccion += edificio.produccion
+			}
+			for(var b = 0; b < ds_list_size(red.edificios_index[28]); b++){
+				var edificio = red.edificios_index[28][|b]
+				edificio.produccion = min(edificio.red[0].eficiencia, edificio.red[2].eficiencia, edificio.red[3].eficiencia)
+				red.produccion += 3 * edificio.produccion
 			}
 			red.consumo = ds_list_size(red.edificios_index[17])
 			calcular_eficiencia(red)
@@ -63,6 +73,11 @@ function update_eficiencia(){
 				var edificio = red.edificios_index[13][|b]
 				edificio.produccion = min(edificio.red[1].eficiencia, edificio.red[2].eficiencia)
 				red.produccion += edificio.produccion
+			}
+			for(var b = 0; b < ds_list_size(red.edificios_index[29]); b++){
+				var edificio = red.edificios_index[29][|b]
+				edificio.produccion = min(edificio.red[1].eficiencia, edificio.red[2].eficiencia, edificio.red[3].eficiencia)
+				red.produccion += 3 * edificio.produccion
 			}
 			red.consumo = ds_list_size(red.edificios_index[17]) + ds_list_size(red.edificios_index[18])
 			calcular_eficiencia(red)

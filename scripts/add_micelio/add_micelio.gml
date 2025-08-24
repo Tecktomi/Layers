@@ -19,8 +19,17 @@ function add_micelio(a, b, capa, portal = false){
 						for(var c = 0; c <= 3; c++)
 							add_micelio(a + next_x[c], b + next_y[c], capa + 1, true)
 				}
-				if edificio.index != 10
+				if edificio.index != 10{
+					if edificio.index = 26{
+						var mina = max(0, a - 1), minb = max(0, b - 1), maxa = min(xsize - 1, a + 1), maxb = min(ysize - 1, b + 1)
+						for(var c = mina; c < maxa; c++)
+							for(var d = minb; d < maxb; d++)
+								delete_micelio(c, d, capa)
+						delete_edificio(a, b, capa)
+						return
+					}
 					delete_edificio(a, b, capa)
+				}
 			}
 			//Crecer micelio
 			if id_edificio[capa][# a, b].index != 10{
