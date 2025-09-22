@@ -16,7 +16,7 @@ function update_eficiencia(){
 				edificio.produccion = 2 * edificio.red[0].eficiencia
 				red.produccion += edificio.produccion
 			}
-			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[13]) + ds_list_size(red.edificios_index[27]) + ds_list_size(red.edificios_index[29])
+			red.consumo = ds_list_size(red.edificios_index[11]) + ds_list_size(red.edificios_index[13]) + ds_list_size(red.edificios_index[18]) + ds_list_size(red.edificios_index[27]) + ds_list_size(red.edificios_index[29])
 			calcular_eficiencia(red)
 		}
 		//Red Azul
@@ -79,7 +79,7 @@ function update_eficiencia(){
 				edificio.produccion = min(edificio.red[1].eficiencia, edificio.red[2].eficiencia, edificio.red[3].eficiencia)
 				red.produccion += 3 * edificio.produccion
 			}
-			red.consumo = ds_list_size(red.edificios_index[17]) + ds_list_size(red.edificios_index[18])
+			red.consumo = ds_list_size(red.edificios_index[17])
 			calcular_eficiencia(red)
 		}
 		//Red Blanco

@@ -9,6 +9,7 @@
     {"name":"add_micelio","order":19,"path":"scripts/add_micelio/add_micelio.yy",},
     {"name":"buscar_micelio","order":53,"path":"scripts/buscar_micelio/buscar_micelio.yy",},
     {"name":"calcular_eficiencia","order":26,"path":"scripts/calcular_eficiencia/calcular_eficiencia.yy",},
+    {"name":"cargar_escenario","order":58,"path":"scripts/cargar_escenario/cargar_escenario.yy",},
     {"name":"delete_edificio","order":16,"path":"scripts/delete_edificio/delete_edificio.yy",},
     {"name":"delete_micelio","order":28,"path":"scripts/delete_micelio/delete_micelio.yy",},
     {"name":"draw_deslizante","order":47,"path":"scripts/draw_deslizante/draw_deslizante.yy",},

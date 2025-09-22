@@ -27,6 +27,7 @@
     {"id":{"name":"add_micelio","path":"scripts/add_micelio/add_micelio.yy",},},
     {"id":{"name":"buscar_micelio","path":"scripts/buscar_micelio/buscar_micelio.yy",},},
     {"id":{"name":"calcular_eficiencia","path":"scripts/calcular_eficiencia/calcular_eficiencia.yy",},},
+    {"id":{"name":"cargar_escenario","path":"scripts/cargar_escenario/cargar_escenario.yy",},},
     {"id":{"name":"delete_edificio","path":"scripts/delete_edificio/delete_edificio.yy",},},
     {"id":{"name":"delete_micelio","path":"scripts/delete_micelio/delete_micelio.yy",},},
     {"id":{"name":"draw_deslizante","path":"scripts/draw_deslizante/draw_deslizante.yy",},},

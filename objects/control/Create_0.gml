@@ -11,9 +11,6 @@ modo_hacker = false
 last_path = 1
 flag_update_eficiencia = false
 menu = 1
-d3 = false
-minimapa = true
-minimapa_pressed = false
 background = [undefined, undefined, undefined]
 background_edificio = [undefined, undefined, undefined]
 minimapa_sprite = [undefined, undefined, undefined]
@@ -27,9 +24,8 @@ valor_edificios = 2
 deslizante_index = 0
 delete_x = 0
 delete_y = 0
-camx = xsize * 8
-camy = ysize * 8
-camzoom = 32
+camx = 0
+camy = 0
 delete_bool = false
 tiempo = 0
 micelio_muerto = 0
@@ -112,7 +108,7 @@ def_edificio("Taladro Mejorado Verde", spr_taladro_mejorado_verde, 3, [0, 1], c_
 def_edificio("Taladro Mejorado Azul", spr_taladro_mejorado_azul, 3, [0, 2], c_blue)
 //17
 def_edificio("Fábrica Blanca", spr_fabrica_blanca, 4, [3, 4, 5, 6], c_white)
-def_edificio("Fábrica de Drones", spr_cian, 5, [5], c_aqua)
+def_edificio("Fábrica de Drones", spr_cian, 5, [1], c_aqua)
 //19
 def_edificio("Infinito Rojo", spr_base, 0, [0], c_red)
 def_edificio("Infinito Verde", spr_base, 0, [1], c_green)
